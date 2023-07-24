@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "19089190082",
+    "project_id": "hyper-pong-eafbc",
+    "storage_bucket": "hyper-pong-eafbc.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:19089190082:android:e2ac5ec4abaec4a105df5b",
+        "android_client_info": {
+          "package_name": "com.alpaca.hyperpong"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "19089190082-0vad8j2ctalutjlbc7tql411bpbr915d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.alpaca.hyperpong",
+            "certificate_hash": "72e0e403aef615f29dd7939ef1fcef95f4305f86"
+          }
+        },
+        {
+          "client_id": "19089190082-6lqlnsrhagk32rivg4tt0i5lu8f4sj1c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8H6dD_Y8ep4763SCzRTf76UY3RDGzX24"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "19089190082-0jbv5obpeif6bs6lrdrjol8vt1q16nbu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
