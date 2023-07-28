@@ -1,15 +1,15 @@
 package com.alpaca.hyperpong.presentation.screens.home
 
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BackdropScaffold
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BackdropValue
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.ExperimentalMaterialApi
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.DrawerValue
@@ -131,8 +131,15 @@ fun HomeScreen(
             },
             frontLayerContent = {
                 when (selectedTab) {
-                    HomeTab.Eventos -> HomeFrontLayer(eventos = eventos, categoria = selectedTab)
-                    HomeTab.Aulas -> HomeFrontLayer(aulas = aulas, categoria = selectedTab)
+                    HomeTab.Eventos -> HomeFrontLayer(eventos = eventos, categoria = selectedTab) {
+                        navController.navigate(Screen.EventDetails.route) {
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    }
+                    HomeTab.Aulas -> HomeFrontLayer(aulas = aulas, categoria = selectedTab) {
+
+                    }
                 }
             }
         )

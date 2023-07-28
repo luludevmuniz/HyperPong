@@ -1,11 +1,13 @@
 package com.alpaca.hyperpong.presentation.screens.home
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -97,7 +99,8 @@ fun HomeFrontLayer(
     modifier: Modifier = Modifier,
     eventos: List<Evento> = emptyList(),
     aulas: List<Aula> = emptyList(),
-    categoria: HomeTab
+    categoria: HomeTab,
+    onItemClicked: (Evento) -> Unit
 ) {
     val isTelaEventos = categoria == HomeTab.Eventos
     Surface(
@@ -118,7 +121,7 @@ fun HomeFrontLayer(
                 LazyColumn(state = listState) {
                     if (isTelaEventos) {
                         items(eventos) { evento ->
-                            ListItemEvento(evento)
+                            ListItemEvento(evento = evento, onItemClicked = { onItemClicked(it) })
                         }
                     } else {
                         items(aulas) { aula ->
@@ -132,12 +135,14 @@ fun HomeFrontLayer(
 }
 
 @Composable
-private fun ListItemEvento(evento: Evento) {
+private fun ListItemEvento(evento: Evento, onItemClicked: (Evento) -> Unit) {
     ListItem(
+        modifier = Modifier.clickable { onItemClicked(evento) },
         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.onSecondary),
         leadingContent = {
             Image(
-                painter = painterResource(id = R.drawable.ic_launcher_background),
+                modifier = Modifier.heightIn(max = 56.dp),
+                painter = painterResource(id = R.drawable.foto_hyper),
                 contentDescription = null
             )
         },

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.alpaca.hyperpong.presentation.screens.EventDetailsScreen
 import com.alpaca.hyperpong.presentation.screens.home.HomeScreen
 import com.alpaca.hyperpong.presentation.screens.login.LoginScreen
 import com.alpaca.hyperpong.presentation.screens.register.RegisterScreen
@@ -34,6 +35,9 @@ fun SetupNavGraph(navController: NavHostController, startDestination: String) {
         }
         composable(route = Screen.AboutEvents.route) {
 
+        }
+        composable(route = Screen.EventDetails.route) {
+            EventDetailsScreen()
         }
     }
 }

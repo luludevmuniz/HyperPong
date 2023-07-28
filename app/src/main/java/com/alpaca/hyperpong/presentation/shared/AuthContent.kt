@@ -82,7 +82,10 @@ fun AuthContent(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             topContent()
-            FormularioDadosUsuario(tituloBotao = buttonText) { email, senha ->
+            FormularioDadosUsuario(
+                tituloBotao = buttonText,
+                buttonEnabled = !loadingRequest
+            ) { email, senha ->
                 onButtonClicked(email, senha)
             }
             Text(
@@ -115,6 +118,7 @@ fun AuthContent(
 fun FormularioDadosUsuario(
     modifier: Modifier = Modifier,
     tituloBotao: String,
+    buttonEnabled: Boolean,
     onButtonClicked: (email: String, senha: String) -> Unit
 ) {
     var email by rememberSaveable { mutableStateOf("") }
@@ -214,6 +218,7 @@ fun FormularioDadosUsuario(
         Spacer(modifier = Modifier.height(12.dp))
         Button(
             modifier = Modifier.fillMaxWidth(),
+            enabled = buttonEnabled,
             onClick = {
                 isEmailComErro = email.isBlank()
                 isSenhaComErro = senha.isBlank()
