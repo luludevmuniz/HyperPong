@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
@@ -15,6 +13,8 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,7 +50,7 @@ fun DropdownFilterButton(
         FilledTonalButton(
             modifier = modifier
                 .fillMaxWidth()
-                .background(color = MaterialTheme.colors.surface)
+                .background(color = MaterialTheme.colorScheme.surface)
                 .menuAnchor(),
             onClick = {
             },
@@ -61,7 +61,7 @@ fun DropdownFilterButton(
             )
         ) {
             Icon(
-                tint = MaterialTheme.colors.onSurface,
+                tint = MaterialTheme.colorScheme.onSurface,
                 painter = leadingIcon,
                 contentDescription = "Ícone Joystick"
             )
@@ -73,7 +73,7 @@ fun DropdownFilterButton(
             trailingIcon?.let {
                 Icon(
                     modifier = Modifier.rotate(trailingIconRotation),
-                    tint = MaterialTheme.colors.onSurface,
+                    tint = MaterialTheme.colorScheme.onSurface,
                     painter = trailingIcon,
                     contentDescription = "Ícone Joystick"
                 )
@@ -93,7 +93,7 @@ fun DropdownFilterButton(
                             Icon(
                                 imageVector = menuItemTrailingIcon,
                                 contentDescription = "Select Event Icon",
-                                tint = MaterialTheme.colors.onSurface
+                                tint = MaterialTheme.colorScheme.onSurface
                             )
                         },
                         onClick = { menuItemSelected = !menuItemSelected }

@@ -10,11 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Add
-import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -27,15 +26,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.alpaca.hyperpong.R
 
-val BottomSheetShape = RoundedCornerShape(
-    topStart = 20.dp,
-    topEnd = 20.dp,
-    bottomStart = 0.dp,
-    bottomEnd = 0.dp
-)
-
 enum class CategoriaAula {
-    Movimentacao, Reflexo, Criatividade, Saque
+    Movimentacao, Reflexo, Criatividade
 }
 
 data class Aula(
@@ -62,7 +54,7 @@ val aulas = listOf(
         nome = "Aula Coletiva",
         data = "26 de julho",
         hora = "19h - 20:30h",
-        categoria = CategoriaAula.Movimentacao
+        categoria = CategoriaAula.Criatividade
     )
 )
 
@@ -110,8 +102,7 @@ fun HomeFrontLayer(
     val isTelaEventos = categoria == HomeTab.Eventos
     Surface(
         modifier = modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.secondaryContainer,
-        shape = BottomSheetShape
+        color = MaterialTheme.colorScheme.secondaryContainer
     ) {
         Column(
             modifier = Modifier.padding(
@@ -120,9 +111,7 @@ fun HomeFrontLayer(
                 top = 16.dp
             )
         ) {
-            Text(
-                text = if (isTelaEventos) "Próximos Eventos" else "Próximas Aulas"
-            )
+            Text(text = if (isTelaEventos) "Próximos Eventos" else "Próximas Aulas")
             Spacer(Modifier.height(16.dp))
             Box(modifier = Modifier.weight(1f)) {
                 val listState = rememberLazyListState()
@@ -161,7 +150,7 @@ private fun ListItemEvento(evento: Evento) {
             )
         }
     )
-    Divider()
+    HorizontalDivider()
 }
 
 @Composable
@@ -180,5 +169,5 @@ private fun ListItemAula(aula: Aula) {
             Text(text = aula.hora)
         }
     )
-    Divider()
+    HorizontalDivider()
 }

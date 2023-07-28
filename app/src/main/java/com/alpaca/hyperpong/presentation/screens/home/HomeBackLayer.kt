@@ -6,9 +6,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.TabRow
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -26,14 +26,14 @@ fun HomeBackLayer(
         .verticalScroll(state = rememberScrollState())) {
         TabRow(
             selectedTabIndex = selectedTab.ordinal,
-            backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+            containerColor = MaterialTheme.colorScheme.secondaryContainer,
             contentColor = MaterialTheme.colorScheme.primary
         ) {
             HomeTab.values().forEach { tab ->
                 Tab(
                     selected = tab == selectedTab,
                     onClick = { onTabSelected(tab) },
-                    text = { Text(text = tab.name) }
+                    text = { Text(text = tab.name, color = MaterialTheme.colorScheme.onSurface) }
                 )
             }
         }
@@ -66,7 +66,10 @@ private fun HomeBackLayerContent(selectedTab: HomeTab) {
                     listOf("Aula Individual", "Aula Em Dupla", "Aula Coletiva", "Treino Secreto")
             }
         }
-        HomeFilterButtons(modalidades = listaModalidades, niveis = listaNiveis)
+        HomeFilterButtons(
+            modalidades = listaModalidades,
+            niveis = listaNiveis
+        )
         FilterChipRow(items = listOf("Futuros", "Concluídos"))
     }
 }

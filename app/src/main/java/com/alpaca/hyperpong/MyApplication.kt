@@ -1,7 +1,7 @@
 package com.alpaca.hyperpong
 
 import android.app.Application
-import dagger.hilt.InstallIn
+import dagger.hilt.android.HiltAndroidApp
 
-@InstallIn
+@HiltAndroidApp
 class MyApplication : Application()
