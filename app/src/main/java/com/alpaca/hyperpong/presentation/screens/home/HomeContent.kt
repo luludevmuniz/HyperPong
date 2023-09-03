@@ -1,27 +1,35 @@
 package com.alpaca.hyperpong.presentation.screens.home
 
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BackdropScaffold
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeContent(
+    homeViewModel: HomeViewModel = hiltViewModel(),
     onNavigationIconClicked: () -> Unit,
-    onEventClicked: () -> Unit,
+    onEventClicked: (String) -> Unit,
     onAulaClicked: () -> Unit
 ) {
     var selectedTab by remember {
         mutableStateOf(HomeTab.Eventos)
     }
+    val eventos by homeViewModel.eventos.collectAsState()
+
     BackdropScaffold(
         scaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed),
         appBar = {
@@ -41,8 +49,8 @@ fun HomeContent(
         },
         frontLayerContent = {
             when (selectedTab) {
-                HomeTab.Eventos -> HomeFrontLayer(eventos = eventos, categoria = selectedTab) {
-                    onEventClicked()
+                HomeTab.Eventos -> HomeFrontLayer(eventos = eventos, categoria = selectedTab) { idEvento ->
+                    onEventClicked(idEvento)
                 }
 
                 HomeTab.Aulas -> HomeFrontLayer(aulas = aulas, categoria = selectedTab) {

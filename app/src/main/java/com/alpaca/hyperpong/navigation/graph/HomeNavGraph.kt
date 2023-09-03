@@ -2,10 +2,13 @@ package com.alpaca.hyperpong.navigation.graph
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import com.alpaca.hyperpong.navigation.ARG_EVENT_ID
 import com.alpaca.hyperpong.navigation.HomeScreen
-import com.alpaca.hyperpong.presentation.screens.EventDetailsScreen
+import com.alpaca.hyperpong.presentation.screens.detalhes_evento.DetalhesEventoScreen
 import com.alpaca.hyperpong.presentation.screens.about.aulas.AboutAulasScreen
 import com.alpaca.hyperpong.presentation.screens.about.events.AboutEventsScreen
 import com.alpaca.hyperpong.presentation.screens.home.HomeContent
@@ -20,8 +23,13 @@ fun HomeNavGraph(navController: NavHostController, onNavigationIconClicked: () -
         composable(route = HomeScreen.Home.route) {
             HomeContent(
                 onNavigationIconClicked = { onNavigationIconClicked() },
-                onEventClicked = {
-                    navController.navigate(route = HomeScreen.EventDetails.route)
+                onEventClicked = {  idEvento ->
+                    navController.navigate(route = HomeScreen.EventDetails.passId(idEvento)) {
+                        popUpTo(route = HomeScreen.Home.route) {
+                            inclusive = true
+                        }
+                        launchSingleTop
+                    }
                 },
                 onAulaClicked = {}
             )
@@ -38,8 +46,14 @@ fun HomeNavGraph(navController: NavHostController, onNavigationIconClicked: () -
         composable(route = HomeScreen.AboutEvents.route) {
             AboutEventsScreen(onNavigationIconClicked = { onNavigationIconClicked() })
         }
-        composable(route = HomeScreen.EventDetails.route) {
-            EventDetailsScreen(onNavigationIconClicked = { onNavigationIconClicked() })
+        composable(
+            route = HomeScreen.EventDetails.route,
+            arguments = listOf(navArgument(ARG_EVENT_ID) { type = NavType.StringType })
+        ) {backStackEntry ->
+            DetalhesEventoScreen(
+                eventoId = backStackEntry.arguments?.getString(ARG_EVENT_ID).orEmpty(),
+                onNavigationIconClicked = { onNavigationIconClicked() }
+            )
         }
     }
 }

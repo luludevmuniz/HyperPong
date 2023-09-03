@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "19089190082",
+    "firebase_url": "https://hyper-pong-eafbc-default-rtdb.firebaseio.com",
     "project_id": "hyper-pong-eafbc",
     "storage_bucket": "hyper-pong-eafbc.appspot.com"
   },

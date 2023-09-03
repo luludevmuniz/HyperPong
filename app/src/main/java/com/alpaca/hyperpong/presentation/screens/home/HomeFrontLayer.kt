@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -24,9 +25,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import coil.size.Scale
 import com.alpaca.hyperpong.R
+import com.alpaca.hyperpong.domain.model.Evento
 
 enum class CategoriaAula {
     Movimentacao, Reflexo, Criatividade
@@ -60,39 +67,6 @@ val aulas = listOf(
     )
 )
 
-data class Evento(
-    val nome: String,
-    val data: String,
-    val imagem: String,
-    val inscricoesAbertas: Boolean
-)
-
-val eventos = listOf(
-    Evento(
-        nome = "Copa Hyper",
-        data = "16 e 17 de setembro",
-        imagem = "",
-        inscricoesAbertas = false
-    ),
-    Evento(
-        nome = "Rachão",
-        data = "22 de julho",
-        imagem = "",
-        inscricoesAbertas = true
-    ),
-    Evento(
-        nome = "Torneio Interno",
-        data = "11 e 12 de agosto",
-        imagem = "",
-        inscricoesAbertas = false
-    ),
-    Evento(
-        nome = "Rachão",
-        data = "26 de agosto",
-        imagem = "",
-        inscricoesAbertas = false
-    ),
-)
 
 @Composable
 fun HomeFrontLayer(
@@ -100,7 +74,7 @@ fun HomeFrontLayer(
     eventos: List<Evento> = emptyList(),
     aulas: List<Aula> = emptyList(),
     categoria: HomeTab,
-    onItemClicked: (Evento) -> Unit
+    onItemClicked: (String) -> Unit
 ) {
     val isTelaEventos = categoria == HomeTab.Eventos
     Surface(
@@ -121,7 +95,12 @@ fun HomeFrontLayer(
                 LazyColumn(state = listState) {
                     if (isTelaEventos) {
                         items(eventos) { evento ->
-                            ListItemEvento(evento = evento, onItemClicked = { onItemClicked(it) })
+                            ListItemEvento(
+                                evento = evento,
+                                onItemClicked = { idEvento ->
+                                    onItemClicked(idEvento)
+                                }
+                            )
                         }
                     } else {
                         items(aulas) { aula ->
@@ -135,19 +114,23 @@ fun HomeFrontLayer(
 }
 
 @Composable
-private fun ListItemEvento(evento: Evento, onItemClicked: (Evento) -> Unit) {
+private fun ListItemEvento(evento: Evento, onItemClicked: (String) -> Unit) {
     ListItem(
-        modifier = Modifier.clickable { onItemClicked(evento) },
+        modifier = Modifier.clickable { onItemClicked(evento.id) },
         colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.onSecondary),
         leadingContent = {
-            Image(
-                modifier = Modifier.heightIn(max = 56.dp),
-                painter = painterResource(id = R.drawable.foto_hyper),
-                contentDescription = null
+            AsyncImage(
+                modifier = Modifier.sizeIn(maxHeight = 56.dp, maxWidth = 56.dp),
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(evento.imagem)
+                    .crossfade(true)
+                    .build(),
+                contentScale = ContentScale.FillBounds,
+                contentDescription = "Imagem do evento ${evento.nome}"
             )
         },
         headlineContent = { Text(text = evento.nome) },
-        supportingContent = { Text(text = evento.data) },
+        supportingContent = { Text(text = evento.dataInicio) },
         trailingContent = {
             Icon(
                 imageVector = Icons.Outlined.Add,

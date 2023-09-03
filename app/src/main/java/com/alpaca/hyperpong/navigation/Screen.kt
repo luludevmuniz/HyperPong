@@ -11,5 +11,11 @@ sealed class HomeScreen(val route: String) {
     object AboutUs: HomeScreen("about_us_screen")
     object AboutLessons: HomeScreen("about_lessons_screen")
     object AboutEvents: HomeScreen("about_events_screen")
-    object EventDetails: HomeScreen("event_details_screen")
+    object EventDetails: HomeScreen("event_details_screen/{$ARG_EVENT_ID}") {
+        fun passId(id: String): String {
+            return "event_details_screen/$id"
+        }
+    }
 }
+
+const val ARG_EVENT_ID = "idEvento"
