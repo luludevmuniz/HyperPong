@@ -1,12 +1,15 @@
 package com.alpaca.hyperpong.navigation
 
-sealed class Screen(val route: String) {
-    object Login: Screen("login_screen")
-    object Register: Screen("register_screen")
-    object Home: Screen("home_screen")
-    object Settings: Screen("settings_screen")
-    object AboutUs: Screen("about_us_screen")
-    object AboutLessons: Screen("about_lessons_screen")
-    object AboutEvents: Screen("about_events_screen")
-    object EventDetails: Screen("event_details_screen")
+sealed class AuthScreen(val route: String) {
+    object Login: AuthScreen("login_screen")
+    object Register: AuthScreen("register_screen")
+}
+
+sealed class HomeScreen(val route: String) {
+    object Home: HomeScreen("home_screen")
+    object Settings: HomeScreen("settings_screen")
+    object AboutUs: HomeScreen("about_us_screen")
+    object AboutLessons: HomeScreen("about_lessons_screen")
+    object AboutEvents: HomeScreen("about_events_screen")
+    object EventDetails: HomeScreen("event_details_screen")
 }

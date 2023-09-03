@@ -2,35 +2,35 @@ package com.alpaca.hyperpong.navigation
 
 import com.alpaca.hyperpong.R
 
-sealed class MenuItem(val title: String, val iconId: Int, val screen: Screen) {
+sealed class MenuItem(val title: String, val iconId: Int, val route: String) {
     object Home: MenuItem(
         title = "Home",
         iconId = R.drawable.ic_home,
-        screen = Screen.Home
+        route = HomeScreen.Home.route
     )
     object SobreEventos: MenuItem(
         title = "Sobre os eventos",
         iconId = R.drawable.ic_event_info,
-        screen = Screen.AboutEvents
+        route = HomeScreen.AboutEvents.route
     )
     object SobreAulas: MenuItem(
         title = "Sobre as aulas",
         iconId = R.drawable.ic_table,
-        screen = Screen.AboutLessons
+        route = HomeScreen.AboutLessons.route
     )
     object SobreNos: MenuItem(
         title = "Sobre nós",
         iconId = R.drawable.ic_two_people,
-        screen = Screen.AboutUs
+        route = HomeScreen.AboutUs.route
     )
     object Configuracoes: MenuItem(
         title = "Configurações",
         iconId = R.drawable.ic_settings,
-        screen = Screen.Settings
+        route = HomeScreen.Settings.route
     )
     object Sair: MenuItem(
         title = "Sair",
         iconId = R.drawable.ic_close,
-        screen = Screen.Login
+        route = AuthScreen.Login.route
     )
 }

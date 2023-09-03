@@ -8,8 +8,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.rememberNavController
-import com.alpaca.hyperpong.navigation.Screen
-import com.alpaca.hyperpong.navigation.SetupNavGraph
+import com.alpaca.hyperpong.navigation.graph.Graph
+import com.alpaca.hyperpong.navigation.graph.RootNavigationGraph
 import com.alpaca.hyperpong.presentation.shared.AuthViewModel
 import com.alpaca.hyperpong.ui.theme.HyperPongTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,10 +23,9 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val authViewModel: AuthViewModel = hiltViewModel()
                 val isUsuarioLogado by remember { mutableStateOf(authViewModel.isUsuarioLogado.value) }
-                SetupNavGraph(
+                RootNavigationGraph(
                     navController = navController,
-                    startDestination = if (isUsuarioLogado) Screen.Home.route
-                    else Screen.Login.route
+                    startDestination = if (isUsuarioLogado) Graph.HOME else Graph.AUTHENTICATION
                 )
             }
         }

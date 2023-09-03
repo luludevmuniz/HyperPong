@@ -20,16 +20,15 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import com.alpaca.hyperpong.navigation.Screen
 import com.alpaca.hyperpong.presentation.shared.AuthContent
 import com.alpaca.hyperpong.presentation.shared.AuthViewModel
 import com.alpaca.hyperpong.util.RequestState
 
 @Composable
 fun RegisterScreen(
-    navController: NavHostController,
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onSignInClicked: () -> Unit,
+    onSignedUp: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val signUpState by authViewModel.signUpState.collectAsState()
@@ -55,7 +54,7 @@ fun RegisterScreen(
                     onValueChange = { nome = it }
                 )
             },
-            onBottomTextButtonClicked = { navController.navigate(Screen.Login.route) }
+            onBottomTextButtonClicked = { onSignInClicked() }
         ) { email, senha ->
             authViewModel.cadastrarUsuario(email = email, senha = senha)
         }
@@ -65,7 +64,7 @@ fun RegisterScreen(
         when (val response = signUpState) {
             is RequestState.Success -> {
                 snackbarHostState.showSnackbar("Cadastro realizado com sucesso!")
-                navController.navigate(Screen.Home.route)
+                onSignedUp()
             }
 
             is RequestState.Error -> snackbarHostState.showSnackbar(

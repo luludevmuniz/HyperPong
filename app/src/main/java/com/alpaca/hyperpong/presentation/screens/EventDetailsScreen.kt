@@ -5,7 +5,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,19 +25,23 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.alpaca.hyperpong.R
+import com.alpaca.hyperpong.presentation.common.ItemIconeTexto
 import com.alpaca.hyperpong.ui.theme.HyperPongTheme
 
 @Composable
-fun EventDetailsScreen() {
+fun EventDetailsScreen(
+    onNavigationIconClicked: () -> Unit
+) {
     Scaffold(
+        topBar = {
+                 //TODO: Implementar toolbar fundo degrade e apenas ícone hamburguer
+        },
         floatingActionButton = {
             ExtendedFloatingActionButton(
                 text = { Text(text = "Inscrever") },
@@ -50,8 +53,8 @@ fun EventDetailsScreen() {
                 },
                 onClick = { /*TODO*/ })
         }
-    ) {
-        Column(modifier = Modifier.padding(it)) {
+    ) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
             Image(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -69,10 +72,18 @@ fun EventDetailsScreen() {
                             bottomEnd = 20.dp
                         )
                     )
-                    .padding(top = 24.dp, start = 24.dp, end = 24.dp, bottom = 16.dp)
+                    .padding(
+                        top = 24.dp,
+                        start = 24.dp,
+                        end = 24.dp,
+                        bottom = 16.dp
+                    )
             ) {
                 Column(modifier = Modifier.background(color = MaterialTheme.colorScheme.primaryContainer)) {
-                    Row {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         ItemIconeTexto(
                             icone = painterResource(id = R.drawable.ic_money_value),
                             texto = "Valor: R$ 50,00"
@@ -83,7 +94,10 @@ fun EventDetailsScreen() {
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
-                    Row {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
                         ItemIconeTexto(
                             icone = painterResource(id = R.drawable.ic_event_day),
                             texto = "Data: 24/08/2023"
@@ -149,29 +163,10 @@ fun EventDetailsScreen() {
     }
 }
 
-@Composable
-private fun RowScope.ItemIconeTexto(icone: Painter, texto: String) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .weight(1f)
-    ) {
-        Icon(
-            painter = icone,
-            contentDescription = ""
-        )
-        Spacer(modifier = Modifier.width(6.dp))
-        Text(
-            text = texto,
-            fontSize = 12.sp
-        )
-    }
-}
-
 @Preview(showSystemUi = true)
 @Composable
 fun EventDetailsScreenPrev() {
     HyperPongTheme {
-        EventDetailsScreen()
+        EventDetailsScreen {}
     }
 }

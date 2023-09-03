@@ -1,6 +1,5 @@
 package com.alpaca.hyperpong.presentation.screens.login
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -15,8 +14,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import com.alpaca.hyperpong.navigation.Screen
 import com.alpaca.hyperpong.presentation.common.RichTooltipGenerico
 import com.alpaca.hyperpong.presentation.shared.AuthContent
 import com.alpaca.hyperpong.presentation.shared.AuthViewModel
@@ -24,10 +21,10 @@ import com.alpaca.hyperpong.util.RequestState
 
 @Composable
 fun LoginScreen(
-    navController: NavHostController,
-    authViewModel: AuthViewModel = hiltViewModel()
+    authViewModel: AuthViewModel = hiltViewModel(),
+    onSignUpClick: () -> Unit,
+    onAuthenticaded: () -> Unit
 ) {
-    Log.d("TESTE", "CHEGOU NA LOGIN SCREEN")
     val snackbarHostState = remember { SnackbarHostState() }
     val signInResponse by authViewModel.signInState.collectAsState()
     val loadingRequest by remember { derivedStateOf { signInResponse is RequestState.Loading } }
@@ -49,7 +46,7 @@ fun LoginScreen(
                     onActionClicked = {}
                 )
             },
-            onBottomTextButtonClicked = { navController.navigate(Screen.Register.route) }
+            onBottomTextButtonClicked = { onSignUpClick() }
         ) { email, senha ->
             authViewModel.logarUsuario(email = email, senha = senha)
         }
@@ -57,7 +54,7 @@ fun LoginScreen(
 
     LaunchedEffect(signInResponse) {
         when (val response = signInResponse) {
-            is RequestState.Success -> { navController.navigate(Screen.Home.route) }
+            is RequestState.Success -> { onAuthenticaded() }
             is RequestState.Error -> snackbarHostState.showSnackbar(
                 response.t.localizedMessage ?: "Não foi possível fazer login"
             )
