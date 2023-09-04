@@ -1,10 +1,5 @@
 package com.alpaca.hyperpong.presentation.screens.detalhes_evento
 
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import com.alpaca.hyperpong.domain.model.Evento
 import com.google.firebase.database.ktx.database

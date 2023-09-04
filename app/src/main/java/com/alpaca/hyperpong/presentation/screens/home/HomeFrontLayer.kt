@@ -1,7 +1,6 @@
 package com.alpaca.hyperpong.presentation.screens.home
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -160,7 +159,7 @@ private fun ListItemEvento(evento: Evento, onItemClicked: (String) -> Unit) {
         trailingContent = {
             Icon(
                 painter = painterResource(id = R.drawable.ic_bolt_sharp),
-                tint = evento.statusEvento.getTint(),
+                tint = evento.statusEvento.getColor(),
                 contentDescription = "Ícone Inscrições Abertas"
             )
         }

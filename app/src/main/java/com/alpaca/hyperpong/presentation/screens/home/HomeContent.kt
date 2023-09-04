@@ -9,13 +9,13 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alpaca.hyperpong.presentation.common.TopBarPadrao
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -29,9 +29,9 @@ fun HomeContent(
     var selectedTab by remember {
         mutableStateOf(HomeTab.Eventos)
     }
-    val eventos by homeViewModel.eventos.collectAsState()
-    val eventosConcluidos by homeViewModel.eventosConcluidos.collectAsState()
-    val eventosFuturos by homeViewModel.eventosFuturos.collectAsState()
+    val eventos by homeViewModel.eventos.collectAsStateWithLifecycle()
+    val eventosConcluidos by homeViewModel.eventosConcluidos.collectAsStateWithLifecycle()
+    val eventosFuturos by homeViewModel.eventosFuturos.collectAsStateWithLifecycle()
 
     BackdropScaffold(
         scaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed),

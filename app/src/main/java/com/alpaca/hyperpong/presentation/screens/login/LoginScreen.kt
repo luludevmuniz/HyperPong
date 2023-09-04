@@ -8,12 +8,12 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alpaca.hyperpong.presentation.common.RichTooltipGenerico
 import com.alpaca.hyperpong.presentation.shared.AuthContent
 import com.alpaca.hyperpong.presentation.shared.AuthViewModel
@@ -26,7 +26,7 @@ fun LoginScreen(
     onAuthenticaded: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val signInResponse by authViewModel.signInState.collectAsState()
+    val signInResponse by authViewModel.signInState.collectAsStateWithLifecycle()
     val loadingRequest by remember { derivedStateOf { signInResponse is RequestState.Loading } }
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) {
         AuthContent(

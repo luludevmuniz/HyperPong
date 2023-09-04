@@ -11,7 +11,6 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -20,6 +19,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alpaca.hyperpong.presentation.shared.AuthContent
 import com.alpaca.hyperpong.presentation.shared.AuthViewModel
 import com.alpaca.hyperpong.util.RequestState
@@ -31,7 +31,7 @@ fun RegisterScreen(
     onSignedUp: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val signUpState by authViewModel.signUpState.collectAsState()
+    val signUpState by authViewModel.signUpState.collectAsStateWithLifecycle()
     val loadingRequest by remember { derivedStateOf { signUpState is RequestState.Loading } }
     var nome by rememberSaveable { mutableStateOf("") }
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->

@@ -4,9 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.alpaca.hyperpong.navigation.graph.Graph
 import com.alpaca.hyperpong.navigation.graph.RootNavigationGraph
@@ -22,7 +21,8 @@ class MainActivity : ComponentActivity() {
             HyperPongTheme {
                 val navController = rememberNavController()
                 val authViewModel: AuthViewModel = hiltViewModel()
-                val isUsuarioLogado by remember { mutableStateOf(authViewModel.isUsuarioLogado.value) }
+                val isUsuarioLogado by authViewModel.isUsuarioLogado.collectAsStateWithLifecycle()
+
                 RootNavigationGraph(
                     navController = navController,
                     startDestination = if (isUsuarioLogado) Graph.HOME else Graph.AUTHENTICATION

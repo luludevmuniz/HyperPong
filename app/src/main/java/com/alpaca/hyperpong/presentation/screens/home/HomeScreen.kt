@@ -15,7 +15,6 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,17 +24,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.alpaca.hyperpong.R
 import com.alpaca.hyperpong.navigation.HomeScreen
-import com.alpaca.hyperpong.navigation.graph.HomeNavGraph
 import com.alpaca.hyperpong.navigation.MenuItem.Configuracoes
 import com.alpaca.hyperpong.navigation.MenuItem.Home
 import com.alpaca.hyperpong.navigation.MenuItem.Sair
 import com.alpaca.hyperpong.navigation.MenuItem.SobreAulas
 import com.alpaca.hyperpong.navigation.MenuItem.SobreEventos
 import com.alpaca.hyperpong.navigation.MenuItem.SobreNos
+import com.alpaca.hyperpong.navigation.graph.HomeNavGraph
 import com.alpaca.hyperpong.presentation.shared.AuthViewModel
 import kotlinx.coroutines.launch
 
@@ -45,7 +45,7 @@ fun HomeScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
     onUserDisconnected: () -> Unit
 ) {
-    val isUsuarioLogado by authViewModel.isUsuarioLogado.collectAsState()
+    val isUsuarioLogado by authViewModel.isUsuarioLogado.collectAsStateWithLifecycle()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val menuItems = listOf(

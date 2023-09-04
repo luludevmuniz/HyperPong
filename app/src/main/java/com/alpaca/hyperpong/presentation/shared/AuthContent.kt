@@ -115,8 +115,7 @@ fun AuthContent(
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun FormularioDadosUsuario(
-    modifier: Modifier = Modifier,
+private fun FormularioDadosUsuario(
     tituloBotao: String,
     buttonEnabled: Boolean,
     onButtonClicked: (email: String, senha: String) -> Unit
@@ -128,7 +127,7 @@ fun FormularioDadosUsuario(
     var isSenhaComErro by rememberSaveable { mutableStateOf(false) }
     val (focusRequester) = FocusRequester.createRefs()
 
-    Column(modifier = modifier) {
+    Column {
         OutlinedTextField(
             modifier = Modifier.fillMaxWidth(),
             value = email,

@@ -7,7 +7,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
-import com.google.firebase.database.ktx.values
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +21,7 @@ class AuthViewModel : ViewModel(), FirebaseAuth.AuthStateListener {
     val isUsuarioLogado = _isUsuarioLogado.asStateFlow()
     private val _database = Firebase.database.reference
     private val _eventos: MutableStateFlow<List<Evento>> = MutableStateFlow(emptyList())
-    private val eventos = _eventos.asStateFlow()
+
     init {
         _auth.addAuthStateListener(this)
     }

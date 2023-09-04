@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.gms.google-services")
-    kotlin("kapt")
+    id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
 }
 
@@ -13,7 +13,6 @@ android {
     defaultConfig {
         applicationId = "com.alpaca.hyperpong"
         minSdk = 26
-        //noinspection EditedTargetSdkVersion
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -44,7 +43,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.3"
     }
     packaging {
         resources {
@@ -72,11 +71,14 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    val lifecycleVersion = "2.6.1"
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
+
     //Hilt
-    implementation("com.google.dagger:hilt-android:2.46.1")
+    implementation("com.google.dagger:hilt-android:2.48")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
-    kapt("androidx.hilt:hilt-compiler:1.0.0")
-    kapt("com.google.dagger:hilt-android-compiler:2.46.1")
+    ksp("androidx.hilt:hilt-compiler:1.0.0")
+    ksp("com.google.dagger:hilt-android-compiler:2.48")
 
     //Navigation
     val navVersion = "2.7.1"
@@ -90,13 +92,8 @@ dependencies {
     implementation("com.google.firebase:firebase-database-ktx")
 
     //Gson
-    implementation("com.google.code.gson:gson:2.8.9")
+    implementation("com.google.code.gson:gson:2.10")
 
     //Coil
     implementation("io.coil-kt:coil-compose:2.4.0")
-}
-
-// Allow references to generated code
-kapt {
-    correctErrorTypes = true
 }

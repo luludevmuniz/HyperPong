@@ -23,7 +23,8 @@ import com.alpaca.hyperpong.R
 @Composable
 fun HomeFilterButtons(
     modalidades: List<String>,
-    categorias: List<String>? = null
+    categorias: List<String>? = null,
+    onDateButtonClicked: () -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 12.dp)
@@ -47,7 +48,7 @@ fun HomeFilterButtons(
                 .fillMaxWidth()
                 .clip(shape = MaterialTheme.shapes.small)
                 .background(color = MaterialTheme.colorScheme.surface),
-            onClick = {},
+            onClick = { onDateButtonClicked() },
             shape = MaterialTheme.shapes.small,
             contentPadding = PaddingValues(
                 horizontal = 12.dp,
