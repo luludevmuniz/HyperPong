@@ -23,7 +23,7 @@ import com.alpaca.hyperpong.R
 @Composable
 fun HomeFilterButtons(
     modalidades: List<String>,
-    niveis: List<String>? = null
+    categorias: List<String>? = null
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 12.dp)
@@ -34,10 +34,10 @@ fun HomeFilterButtons(
             leadingIcon = painterResource(id = R.drawable.ic_joystick),
             listItens = modalidades
         )
-        niveis?.let {
+        categorias?.let {
             DropdownFilterButton(
                 modifier = Modifier.clip(shape = MaterialTheme.shapes.small),
-                title = "Ajustar Nível Recomendado",
+                title = "Selecionar Categorias",
                 leadingIcon = painterResource(id = R.drawable.ic_settings_slow_motion),
                 listItens = it
             )

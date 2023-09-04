@@ -25,9 +25,7 @@ fun HomeNavGraph(navController: NavHostController, onNavigationIconClicked: () -
                 onNavigationIconClicked = { onNavigationIconClicked() },
                 onEventClicked = {  idEvento ->
                     navController.navigate(route = HomeScreen.EventDetails.passId(idEvento)) {
-                        popUpTo(route = HomeScreen.Home.route) {
-                            inclusive = true
-                        }
+                        popUpTo(route = HomeScreen.Home.route)
                         launchSingleTop
                     }
                 },

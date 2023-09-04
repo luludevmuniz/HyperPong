@@ -1,13 +1,12 @@
 package com.alpaca.hyperpong.presentation.screens.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
@@ -15,7 +14,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -29,9 +27,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import coil.size.Scale
 import com.alpaca.hyperpong.R
 import com.alpaca.hyperpong.domain.model.Evento
 
@@ -71,7 +69,8 @@ val aulas = listOf(
 @Composable
 fun HomeFrontLayer(
     modifier: Modifier = Modifier,
-    eventos: List<Evento> = emptyList(),
+    eventosFuturos: List<Evento> = emptyList(),
+    eventosConcluidos: List<Evento> = emptyList(),
     aulas: List<Aula> = emptyList(),
     categoria: HomeTab,
     onItemClicked: (String) -> Unit
@@ -88,19 +87,46 @@ fun HomeFrontLayer(
                 top = 16.dp
             )
         ) {
-            Text(text = if (isTelaEventos) "Próximos Eventos" else "Próximas Aulas")
             Spacer(Modifier.height(16.dp))
             Box(modifier = Modifier.weight(1f)) {
                 val listState = rememberLazyListState()
                 LazyColumn(state = listState) {
                     if (isTelaEventos) {
-                        items(eventos) { evento ->
-                            ListItemEvento(
-                                evento = evento,
-                                onItemClicked = { idEvento ->
-                                    onItemClicked(idEvento)
-                                }
+                        item {
+                            Text(
+                                modifier = Modifier.padding( bottom = 16.dp),
+                                text = "Próximos Eventos",
+                                fontSize = 16.sp
                             )
+                        }
+                        if (eventosFuturos.isNotEmpty()) {
+                            items(eventosFuturos) { evento ->
+                                ListItemEvento(
+                                    evento = evento,
+                                    onItemClicked = { idEvento ->
+                                        onItemClicked(idEvento)
+                                    }
+                                )
+                            }
+                        } else {
+                            //TODO: Apresentar item "Ainda não há eventos futuros cadastrados"
+                        }
+                        if (eventosConcluidos.isNotEmpty()) {
+                            item {
+                                Text(
+                                    modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
+                                    text = "Eventos Concluídos",
+                                    fontSize = 16.sp
+                                )
+                            }
+                            items(eventosConcluidos) { evento ->
+                                ListItemEvento(
+                                    evento = evento,
+                                    onItemClicked = { idEvento ->
+                                        onItemClicked(idEvento)
+                                    }
+                                )
+                            }
                         }
                     } else {
                         items(aulas) { aula ->
@@ -130,10 +156,11 @@ private fun ListItemEvento(evento: Evento, onItemClicked: (String) -> Unit) {
             )
         },
         headlineContent = { Text(text = evento.nome) },
-        supportingContent = { Text(text = evento.dataInicio) },
+        supportingContent = { Text(text = evento.dataInicioFormatada) },
         trailingContent = {
             Icon(
-                imageVector = Icons.Outlined.Add,
+                painter = painterResource(id = R.drawable.ic_bolt_sharp),
+                tint = evento.statusEvento.getTint(),
                 contentDescription = "Ícone Inscrições Abertas"
             )
         }

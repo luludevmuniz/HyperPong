@@ -56,7 +56,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.alpaca.hyperpong.R
 import com.alpaca.hyperpong.presentation.common.ItemIconeTexto
-import com.alpaca.hyperpong.presentation.screens.home.HomeTopBar
+import com.alpaca.hyperpong.presentation.common.TopBarPadrao
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,7 +76,7 @@ fun DetalhesEventoScreen(
 
     Scaffold(
         topBar = {
-            HomeTopBar {
+            TopBarPadrao(titulo = evento?.nome.orEmpty()) {
                 onNavigationIconClicked()
             }
         },
@@ -135,7 +135,7 @@ fun DetalhesEventoScreen(
                         ) {
                             ItemIconeTexto(
                                 icone = painterResource(id = R.drawable.ic_event_day),
-                                texto = "Data: ${evento?.dataInicio}"
+                                texto = "Data: ${evento?.dataInicioFormatada}"
                             )
                             ItemIconeTexto(
                                 icone = painterResource(id = R.drawable.ic_alarm),

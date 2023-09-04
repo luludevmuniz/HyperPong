@@ -1,6 +1,9 @@
 package com.alpaca.hyperpong.domain.model
 
+import com.alpaca.hyperpong.util.StatusEvento
 import com.google.firebase.database.PropertyName
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 data class Evento(
     @get:PropertyName("address") @set:PropertyName("fieldName")
@@ -17,12 +20,26 @@ data class Evento(
     var id: String = "",
     @get:PropertyName("name") @set:PropertyName("name")
     var nome: String = "",
-    @get:PropertyName("status") @set:PropertyName("status")
-    var status: Int = 0,
+    val status: Int? = null,
     @get:PropertyName("time") @set:PropertyName("time")
     var hora: String = "",
     @get:PropertyName("type") @set:PropertyName("type")
     var tipo: String = "",
     @get:PropertyName("wallpaper") @set:PropertyName("wallpaper")
     var imagem: String = ""
-)
+) {
+    val statusEvento: StatusEvento
+        get() = when (status) {
+            0 -> StatusEvento.FUTURO
+            1 -> StatusEvento.ABERTO
+            2 -> StatusEvento.FINALIZADO
+            else -> StatusEvento.DESCONHECIDO
+        }
+
+    val dataInicioFormatada: String
+        get() {
+            val dataLocal = LocalDate.parse(dataInicio, DateTimeFormatter.ISO_DATE)
+            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+            return dataLocal.format(formatter)
+        }
+}

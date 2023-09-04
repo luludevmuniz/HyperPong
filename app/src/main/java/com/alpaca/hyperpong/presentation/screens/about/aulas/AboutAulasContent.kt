@@ -17,8 +17,8 @@ import com.alpaca.hyperpong.ui.theme.HyperPongTheme
 fun AboutAulasContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
-            .padding(24.dp)
-            .verticalScroll(state = rememberScrollState()),
+            .verticalScroll(state = rememberScrollState())
+            .padding(24.dp),
         verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         SessaoAula(

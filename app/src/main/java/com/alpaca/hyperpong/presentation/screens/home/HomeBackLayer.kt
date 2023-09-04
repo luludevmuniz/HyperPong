@@ -13,11 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.alpaca.hyperpong.domain.model.Evento
 import com.alpaca.hyperpong.presentation.common.FilterChipRow
 import com.alpaca.hyperpong.presentation.common.HomeFilterButtons
 
 @Composable
 fun HomeBackLayer(
+    eventos: List<Evento>,
     selectedTab: HomeTab,
     onTabSelected: (HomeTab) -> Unit
 ) {
@@ -37,12 +39,18 @@ fun HomeBackLayer(
                 )
             }
         }
-        HomeBackLayerContent(selectedTab)
+        HomeBackLayerContent(
+            eventos = eventos,
+            selectedTab = selectedTab
+        )
     }
 }
 
 @Composable
-private fun HomeBackLayerContent(selectedTab: HomeTab) {
+private fun HomeBackLayerContent(
+    eventos: List<Evento>,
+    selectedTab: HomeTab
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -68,7 +76,7 @@ private fun HomeBackLayerContent(selectedTab: HomeTab) {
         }
         HomeFilterButtons(
             modalidades = listaModalidades,
-            niveis = listaNiveis
+            categorias = listaNiveis
         )
         FilterChipRow(items = listOf("Futuros", "Concluídos"))
     }

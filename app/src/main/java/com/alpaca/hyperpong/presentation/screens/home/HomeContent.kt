@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.alpaca.hyperpong.presentation.common.TopBarPadrao
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -29,11 +30,13 @@ fun HomeContent(
         mutableStateOf(HomeTab.Eventos)
     }
     val eventos by homeViewModel.eventos.collectAsState()
+    val eventosConcluidos by homeViewModel.eventosConcluidos.collectAsState()
+    val eventosFuturos by homeViewModel.eventosFuturos.collectAsState()
 
     BackdropScaffold(
         scaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed),
         appBar = {
-            HomeTopBar {
+            TopBarPadrao(titulo = "Hyper Pong") {
                 onNavigationIconClicked()
             }
         },
@@ -41,6 +44,7 @@ fun HomeContent(
         backLayerBackgroundColor = MaterialTheme.colorScheme.surface,
         backLayerContent = {
             HomeBackLayer(
+                eventos = eventos,
                 selectedTab = selectedTab,
                 onTabSelected = { newSelectedTab ->
                     selectedTab = newSelectedTab
@@ -49,7 +53,11 @@ fun HomeContent(
         },
         frontLayerContent = {
             when (selectedTab) {
-                HomeTab.Eventos -> HomeFrontLayer(eventos = eventos, categoria = selectedTab) { idEvento ->
+                HomeTab.Eventos -> HomeFrontLayer(
+                    eventosConcluidos = eventosConcluidos,
+                    eventosFuturos = eventosFuturos,
+                    categoria = selectedTab
+                ) { idEvento ->
                     onEventClicked(idEvento)
                 }
 
