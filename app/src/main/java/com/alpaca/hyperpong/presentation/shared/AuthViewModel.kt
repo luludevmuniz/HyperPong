@@ -1,63 +1,78 @@
 package com.alpaca.hyperpong.presentation.shared
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.alpaca.hyperpong.domain.model.Evento
-import com.alpaca.hyperpong.util.RequestState
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.auth.ktx.auth
+import com.alpaca.hyperpong.domain.use_case.authentication.AuthUseCases
+import com.alpaca.hyperpong.util.Response
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class AuthViewModel : ViewModel(), FirebaseAuth.AuthStateListener {
-    private val _auth = Firebase.auth
-    private val _signUpState: MutableStateFlow<RequestState<FirebaseUser?>> = MutableStateFlow(RequestState.Idle)
-    val signUpState = _signUpState.asStateFlow()
-    private val _signInState: MutableStateFlow<RequestState<FirebaseUser?>> = MutableStateFlow(RequestState.Idle)
-    val signInState = _signInState.asStateFlow()
-    private val _isUsuarioLogado = MutableStateFlow(_auth.currentUser != null)
-    val isUsuarioLogado = _isUsuarioLogado.asStateFlow()
+@HiltViewModel
+class AuthViewModel @Inject constructor(
+    private val authUseCases: AuthUseCases
+) : ViewModel() {
+
+    private val _response: MutableStateFlow<Response<Boolean>> =
+        MutableStateFlow(Response.Idle)
+    val response = _response.asStateFlow()
     private val _database = Firebase.database.reference
     private val _eventos: MutableStateFlow<List<Evento>> = MutableStateFlow(emptyList())
 
     init {
-        _auth.addAuthStateListener(this)
+        getAuthState()
+    }
+    val isUsuarioAutenticado get() = authUseCases.isUsuarioAutenticadoUseCase()
+    val isEmailVerificado get() = authUseCases.isEmailVerificadoUseCase()
+    fun getAuthState() = authUseCases.getAuthStateUseCase(viewModelScope = viewModelScope)
+    fun registrarUsuarioComEmailESenha(email: String, senha: String) {
+        _response.value = Response.Loading
+        viewModelScope.launch {
+            _response.value = authUseCases.registrarUsuarioComEmailESenhaUseCase(email = email, senha = senha)
+        }
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        _auth.removeAuthStateListener(this)
+    fun logarComEmailESenha(email: String, senha: String) {
+        _response.value = Response.Loading
+        viewModelScope.launch {
+            _response.value = authUseCases.logarComEmailESenhaUseCase(email = email, senha = senha)
+        }
     }
 
-    fun cadastrarUsuario(email: String, senha: String) {
-        _signUpState.value = RequestState.Loading
-        _auth.createUserWithEmailAndPassword(email, senha)
-            .addOnSuccessListener {
-                _signUpState.value = RequestState.Success(it.user)
-            }
-            .addOnFailureListener {
-                _signUpState.value = RequestState.Error(it)
-            }
+    fun enviarEmailDeVerificacao() {
+        _response.value = Response.Loading
+        viewModelScope.launch {
+            _response.value = authUseCases.enviarEmailDeVerificacaoUseCase()
+        }
     }
 
-    fun logarUsuario(email: String, senha: String) {
-        _signInState.value = RequestState.Loading
-        _auth.signInWithEmailAndPassword(email, senha)
-            .addOnSuccessListener {
-                _signInState.value = RequestState.Success(it.user)
-            }
-            .addOnFailureListener {
-                _signInState.value = RequestState.Error(it)
-            }
+    fun enviarEmailResetDeSenha(email: String) {
+        _response.value = Response.Loading
+        viewModelScope.launch {
+            _response.value = authUseCases.enviarEmailParaRedefinirSenhaUseCase(email = email)
+        }
     }
 
-    fun deslogarUsuario() = _auth.signOut()
-
-    override fun onAuthStateChanged(firebaseAuth: FirebaseAuth) {
-        _isUsuarioLogado.value = firebaseAuth.currentUser != null
+    fun recarregarUsuario() {
+        _response.value = Response.Loading
+        viewModelScope.launch {
+            _response.value = authUseCases.recarregarUsuarioUseCase()
+        }
     }
+
+    fun deletarUsuario() {
+        _response.value = Response.Loading
+        viewModelScope.launch {
+            _response.value = authUseCases.deletarUsuarioUseCase()
+        }
+    }
+
+    fun deslogarUsuario() = authUseCases.deslogarUsuarioUseCase()
 
     fun getEventos() {
         _database.child("events").get().addOnSuccessListener { retornoApi ->

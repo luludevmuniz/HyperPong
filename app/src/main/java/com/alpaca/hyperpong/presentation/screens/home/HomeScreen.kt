@@ -24,7 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.alpaca.hyperpong.R
@@ -45,7 +44,7 @@ fun HomeScreen(
     authViewModel: AuthViewModel = hiltViewModel(),
     onUserDisconnected: () -> Unit
 ) {
-    val isUsuarioLogado by authViewModel.isUsuarioLogado.collectAsStateWithLifecycle()
+    val isUsuarioLogado = authViewModel.isUsuarioAutenticado
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val menuItems = listOf(
@@ -89,9 +88,7 @@ fun HomeScreen(
                                 showLogoutAlert.value = true
                             } else {
                                 navController.navigate(menuItem.route) {
-                                    popUpTo(route = HomeScreen.Home.route) {
-                                        inclusive = true
-                                    }
+                                    popUpTo(route = HomeScreen.Home.route)
                                     launchSingleTop
                                 }
                             }

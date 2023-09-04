@@ -20,7 +20,11 @@ fun RootNavigationGraph(
         composable(route = Graph.HOME) {
             HomeScreen(
                 onUserDisconnected = {
-                    navController.navigate(route = Graph.AUTHENTICATION)
+                    navController.navigate(route = Graph.AUTHENTICATION) {
+                        popUpTo(Graph.HOME) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }

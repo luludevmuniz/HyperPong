@@ -17,7 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alpaca.hyperpong.presentation.common.RichTooltipGenerico
 import com.alpaca.hyperpong.presentation.shared.AuthContent
 import com.alpaca.hyperpong.presentation.shared.AuthViewModel
-import com.alpaca.hyperpong.util.RequestState
+import com.alpaca.hyperpong.util.Response
 
 @Composable
 fun LoginScreen(
@@ -26,8 +26,8 @@ fun LoginScreen(
     onAuthenticaded: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val signInResponse by authViewModel.signInState.collectAsStateWithLifecycle()
-    val loadingRequest by remember { derivedStateOf { signInResponse is RequestState.Loading } }
+    val authResponse by authViewModel.response.collectAsStateWithLifecycle()
+    val loadingRequest by remember { derivedStateOf { authResponse is Response.Loading } }
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) {
         AuthContent(
             modifier = Modifier
@@ -48,19 +48,16 @@ fun LoginScreen(
             },
             onBottomTextButtonClicked = { onSignUpClick() }
         ) { email, senha ->
-            authViewModel.logarUsuario(email = email, senha = senha)
+            authViewModel.logarComEmailESenha(email = email, senha = senha)
         }
     }
 
-    LaunchedEffect(signInResponse) {
-        when (val response = signInResponse) {
-            is RequestState.Success -> { onAuthenticaded() }
-            is RequestState.Error -> snackbarHostState.showSnackbar(
-                response.t.localizedMessage ?: "Não foi possível fazer login"
-            )
-
-            RequestState.Idle -> {}
-            RequestState.Loading -> {}
+    LaunchedEffect(authResponse) {
+        when (val response = authResponse) {
+            is Response.Success -> { onAuthenticaded() }
+            is Response.Error -> snackbarHostState.showSnackbar(response.error)
+            Response.Idle -> {}
+            Response.Loading -> {}
         }
     }
 }

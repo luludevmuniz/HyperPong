@@ -26,7 +26,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun RichTooltipGenerico(
     modifier: Modifier = Modifier,
-    contentAligment: Alignment = Alignment.CenterStart,
+    contentAligment: Alignment = Alignment.CenterEnd,
     titulo: String,
     descricao: String,
     textoAcao: String,

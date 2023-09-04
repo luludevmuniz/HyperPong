@@ -22,7 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alpaca.hyperpong.presentation.shared.AuthContent
 import com.alpaca.hyperpong.presentation.shared.AuthViewModel
-import com.alpaca.hyperpong.util.RequestState
+import com.alpaca.hyperpong.util.Response
 
 @Composable
 fun RegisterScreen(
@@ -31,8 +31,8 @@ fun RegisterScreen(
     onSignedUp: () -> Unit
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
-    val signUpState by authViewModel.signUpState.collectAsStateWithLifecycle()
-    val loadingRequest by remember { derivedStateOf { signUpState is RequestState.Loading } }
+    val authResponse by authViewModel.response.collectAsStateWithLifecycle()
+    val loadingRequest by remember { derivedStateOf { authResponse is Response.Loading } }
     var nome by rememberSaveable { mutableStateOf("") }
     Scaffold(snackbarHost = { SnackbarHost(snackbarHostState) }) { paddingValues ->
         AuthContent(
@@ -56,23 +56,21 @@ fun RegisterScreen(
             },
             onBottomTextButtonClicked = { onSignInClicked() }
         ) { email, senha ->
-            authViewModel.cadastrarUsuario(email = email, senha = senha)
+            authViewModel.registrarUsuarioComEmailESenha(email = email, senha = senha)
         }
     }
 
-    LaunchedEffect(signUpState) {
-        when (val response = signUpState) {
-            is RequestState.Success -> {
+    LaunchedEffect(authResponse) {
+        when (val response = authResponse) {
+            is Response.Success -> {
                 snackbarHostState.showSnackbar("Cadastro realizado com sucesso!")
                 onSignedUp()
             }
 
-            is RequestState.Error -> snackbarHostState.showSnackbar(
-                response.t.localizedMessage ?: "Não foi possível concluir a ação"
-            )
+            is Response.Error -> snackbarHostState.showSnackbar(response.error)
 
-            RequestState.Idle -> {}
-            RequestState.Loading -> {}
+            Response.Idle -> {}
+            Response.Loading -> {}
         }
     }
 }

@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             HyperPongTheme {
                 val navController = rememberNavController()
                 val authViewModel: AuthViewModel = hiltViewModel()
-                val isUsuarioLogado by authViewModel.isUsuarioLogado.collectAsStateWithLifecycle()
+                val isUsuarioLogado = authViewModel.isUsuarioAutenticado
 
                 RootNavigationGraph(
                     navController = navController,

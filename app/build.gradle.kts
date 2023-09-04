@@ -73,7 +73,9 @@ dependencies {
 
     val lifecycleVersion = "2.6.1"
     implementation("androidx.lifecycle:lifecycle-runtime-compose:$lifecycleVersion")
-
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     //Hilt
     implementation("com.google.dagger:hilt-android:2.48")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")

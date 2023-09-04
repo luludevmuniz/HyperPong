@@ -14,7 +14,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Divider
 import androidx.compose.material3.Button
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
@@ -42,6 +44,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.alpaca.hyperpong.R
 
@@ -88,16 +91,46 @@ fun AuthContent(
             ) { email, senha ->
                 onButtonClicked(email, senha)
             }
-            Text(
-                text = "Ou entre com",
-                color = MaterialTheme.colorScheme.onSurface
-            )
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                HorizontalDivider(
+                    modifier = Modifier.weight(0.3f),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    modifier = Modifier.weight(0.20f),
+                    textAlign = TextAlign.Center,
+                    text = "Ou",
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                HorizontalDivider(
+                    modifier = Modifier.weight(0.3f),
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+            }
+
             OutlinedButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { }
             ) {
                 Text(text = "Continuar com a conta Google")
             }
+
+            OutlinedButton(
+                modifier = Modifier.fillMaxWidth(),
+                onClick = { }
+            ) {
+                Text(text = "Continuar como convidado")
+            }
+
+            Divider(
+                modifier = Modifier.padding(top = 12.dp),
+                color = MaterialTheme.colorScheme.onSurface
+            )
+
             Row(
                 verticalAlignment = Alignment.CenterVertically
             ) {

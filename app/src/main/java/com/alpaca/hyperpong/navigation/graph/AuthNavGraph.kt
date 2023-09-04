@@ -19,21 +19,25 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
                     navController.navigate(route = AuthScreen.Register.route)
                 },
                 onAuthenticaded = {
-                    navController.navigate(route = Graph.HOME)
+                    navController.navigate(route = Graph.HOME) {
+                        popUpTo(Graph.AUTHENTICATION) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }
         composable(route = AuthScreen.Register.route) {
             RegisterScreen(
                 onSignInClicked = {
-                    navController.navigate(route = AuthScreen.Login.route) {
-                        popUpTo(route = AuthScreen.Login.route) {
+                    navController.popBackStack()
+                },
+                onSignedUp = {
+                    navController.navigate(route = Graph.HOME) {
+                        popUpTo(Graph.AUTHENTICATION) {
                             inclusive = true
                         }
                     }
-                },
-                onSignedUp = {
-                    navController.navigate(route = Graph.HOME)
                 }
             )
         }
