@@ -63,7 +63,6 @@ fun HomeScreen(
             onUserDisconnected()
         }
     }
-    authViewModel.getEventos()
 
     ModalNavigationDrawer(
         drawerState = drawerState,

@@ -9,6 +9,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -16,7 +17,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.alpaca.hyperpong.domain.model.Evento
 import com.alpaca.hyperpong.presentation.common.TopBarPadrao
+import com.alpaca.hyperpong.util.Response
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -29,9 +32,26 @@ fun HomeContent(
     var selectedTab by remember {
         mutableStateOf(HomeTab.Eventos)
     }
-    val eventos by homeViewModel.eventos.collectAsStateWithLifecycle()
-    val eventosConcluidos by homeViewModel.eventosConcluidos.collectAsStateWithLifecycle()
-    val eventosFuturos by homeViewModel.eventosFuturos.collectAsStateWithLifecycle()
+    val eventosState by homeViewModel.eventos.collectAsStateWithLifecycle()
+    var todosEventos = emptyList<Evento>()
+    var eventosConcluidos = emptyList<Evento>()
+    var eventosFuturos = emptyList<Evento>()
+
+    LaunchedEffect(eventosState) {
+        when (val eventos = eventosState) {
+            is Response.Success -> {
+                todosEventos = eventos.data
+                eventosConcluidos = homeViewModel.filtrarEventosConcluidos(eventos = todosEventos)
+                eventosFuturos = homeViewModel.filtrarProximosEventos(eventos = todosEventos)
+            }
+            is Response.Loading -> {
+            }
+            is Response.Error -> {
+            }
+            is Response.Idle -> {
+            }
+        }
+    }
 
     BackdropScaffold(
         scaffoldState = rememberBackdropScaffoldState(BackdropValue.Revealed),
@@ -44,7 +64,7 @@ fun HomeContent(
         backLayerBackgroundColor = MaterialTheme.colorScheme.surface,
         backLayerContent = {
             HomeBackLayer(
-                eventos = eventos,
+                eventos = todosEventos,
                 selectedTab = selectedTab,
                 onTabSelected = { newSelectedTab ->
                     selectedTab = newSelectedTab

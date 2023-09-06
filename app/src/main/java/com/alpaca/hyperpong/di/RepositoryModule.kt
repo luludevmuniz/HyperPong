@@ -1,7 +1,9 @@
 package com.alpaca.hyperpong.di
 
 import com.alpaca.hyperpong.data.repository.AuthRepositoryImpl
+import com.alpaca.hyperpong.data.repository.RealtimeRepositoryImpl
 import com.alpaca.hyperpong.domain.repository.AuthRepository
+import com.alpaca.hyperpong.domain.repository.RealtimeRepository
 import com.alpaca.hyperpong.domain.use_case.authentication.AuthUseCases
 import com.alpaca.hyperpong.domain.use_case.authentication.deletar_usuario.DeletarUsuarioUseCase
 import com.alpaca.hyperpong.domain.use_case.authentication.deslogar_usuario.DeslogarUsuarioUseCase
@@ -14,7 +16,10 @@ import com.alpaca.hyperpong.domain.use_case.authentication.logar_com_email_e_sen
 import com.alpaca.hyperpong.domain.use_case.authentication.logar_usuario_anonimo.LogarUsuarioAnonimoUseCase
 import com.alpaca.hyperpong.domain.use_case.authentication.recarregar_usuario.RecarregarUsuarioUseCase
 import com.alpaca.hyperpong.domain.use_case.authentication.registrar_usuario_com_email_e_senha.RegistrarUsuarioComEmailESenhaUseCase
+import com.alpaca.hyperpong.domain.use_case.realtime.RealtimeUseCases
+import com.alpaca.hyperpong.domain.use_case.realtime.get_eventos.GetEventosUseCase
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
@@ -26,10 +31,14 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 class RepositoryModule {
 
+    @Singleton
     @Provides
-    fun provideAuthRepository(): AuthRepository = AuthRepositoryImpl(
-        auth = Firebase.auth
-    )
+    fun provideAuthRepository(): AuthRepository = AuthRepositoryImpl(auth = Firebase.auth)
+
+    @Singleton
+    @Provides
+    fun provideRealtimeRepository(): RealtimeRepository =
+        RealtimeRepositoryImpl(database = Firebase.database.reference)
 
     @Provides
     @Singleton
@@ -47,4 +56,10 @@ class RepositoryModule {
             recarregarUsuarioUseCase = RecarregarUsuarioUseCase(repository = repository),
             registrarUsuarioComEmailESenhaUseCase = RegistrarUsuarioComEmailESenhaUseCase(repository = repository)
         )
+
+    @Provides
+    @Singleton
+    fun provideRealtimeUseCases(repository: RealtimeRepository): RealtimeUseCases = RealtimeUseCases(
+        getEventosUseCase = GetEventosUseCase(repository = repository)
+    )
 }
