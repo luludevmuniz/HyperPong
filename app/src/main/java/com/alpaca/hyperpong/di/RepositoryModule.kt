@@ -1,6 +1,8 @@
 package com.alpaca.hyperpong.di
 
+import androidx.paging.PagingConfig
 import com.alpaca.hyperpong.data.repository.AuthRepositoryImpl
+import com.alpaca.hyperpong.data.repository.EventosPagingSource
 import com.alpaca.hyperpong.data.repository.RealtimeRepositoryImpl
 import com.alpaca.hyperpong.domain.repository.AuthRepository
 import com.alpaca.hyperpong.domain.repository.RealtimeRepository
@@ -18,7 +20,9 @@ import com.alpaca.hyperpong.domain.use_case.authentication.recarregar_usuario.Re
 import com.alpaca.hyperpong.domain.use_case.authentication.registrar_usuario_com_email_e_senha.RegistrarUsuarioComEmailESenhaUseCase
 import com.alpaca.hyperpong.domain.use_case.realtime.RealtimeUseCases
 import com.alpaca.hyperpong.domain.use_case.realtime.get_eventos.GetEventosUseCase
+import com.alpaca.hyperpong.util.Constantes.TAMANHO_PAGINA
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import dagger.Module
@@ -37,8 +41,33 @@ class RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideRealtimeRepository(): RealtimeRepository =
-        RealtimeRepositoryImpl(database = Firebase.database.reference)
+    fun provideRealtimeRef() = Firebase.database.reference
+
+    @Singleton
+    @Provides
+    fun provideEventosPagingSource(database: DatabaseReference) =
+        EventosPagingSource(database = database)
+
+    @Singleton
+    @Provides
+    fun providePagingConfig() = PagingConfig(pageSize = TAMANHO_PAGINA)
+
+    @Singleton
+    @Provides
+    fun provideProductsRepository(
+        source: EventosPagingSource,
+        config: PagingConfig
+    ): RealtimeRepository = RealtimeRepositoryImpl(
+        source = source,
+        config = config
+    )
+
+    @Provides
+    @Singleton
+    fun provideRealtimeUseCases(repository: RealtimeRepository): RealtimeUseCases =
+        RealtimeUseCases(
+            getEventosUseCase = GetEventosUseCase(repository = repository)
+        )
 
     @Provides
     @Singleton
@@ -57,9 +86,9 @@ class RepositoryModule {
             registrarUsuarioComEmailESenhaUseCase = RegistrarUsuarioComEmailESenhaUseCase(repository = repository)
         )
 
-    @Provides
-    @Singleton
-    fun provideRealtimeUseCases(repository: RealtimeRepository): RealtimeUseCases = RealtimeUseCases(
-        getEventosUseCase = GetEventosUseCase(repository = repository)
-    )
+//    @Singleton
+//    @Provides
+//    fun provideRealtimeRepository(): RealtimeRepository =
+//        RealtimeRepositoryImpl(database = Firebase.database.reference)
+
 }

@@ -1,11 +1,11 @@
 package com.alpaca.hyperpong.domain.repository
 
+import androidx.paging.PagingData
 import com.alpaca.hyperpong.domain.model.Evento
-import com.alpaca.hyperpong.util.Response
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.Flow
 
-typealias RetornoEventos = StateFlow<Response<List<Evento>>>
+typealias RetornoEventos = Flow<PagingData<Evento>>
 
 interface RealtimeRepository {
     fun getEventos(viewModelScope: CoroutineScope): RetornoEventos

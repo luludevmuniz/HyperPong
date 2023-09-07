@@ -9,10 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
@@ -27,6 +26,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.alpaca.hyperpong.R
@@ -68,8 +70,7 @@ val aulas = listOf(
 @Composable
 fun HomeFrontLayer(
     modifier: Modifier = Modifier,
-    eventosFuturos: List<Evento> = emptyList(),
-    eventosConcluidos: List<Evento> = emptyList(),
+    homeViewModel: HomeViewModel = hiltViewModel(),
     aulas: List<Aula> = emptyList(),
     categoria: HomeTab,
     onItemClicked: (String) -> Unit
@@ -89,7 +90,23 @@ fun HomeFrontLayer(
             Spacer(Modifier.height(16.dp))
             Box(modifier = Modifier.weight(1f)) {
                 val listState = rememberLazyListState()
+                val pagingEventos = homeViewModel.eventos.collectAsLazyPagingItems()
+                val refresh = pagingEventos.loadState.refresh
+                val append = pagingEventos.loadState.append
+
+                pagingEventos.loadState.apply {
+                    when {
+                        refresh is LoadState.Loading -> CircularProgressIndicator()
+                        refresh is LoadState.Error -> printErrorState(refresh)
+                        append is LoadState.Loading -> CircularProgressIndicator()
+                        append is LoadState.Error -> printErrorState(append)
+                    }
+                }
+
                 LazyColumn(state = listState) {
+                    items(count = pagingEventos.itemCount) { index ->
+                        val item = pagingEventos[index]
+                    }
                     if (isTelaEventos) {
                         item {
                             Text(

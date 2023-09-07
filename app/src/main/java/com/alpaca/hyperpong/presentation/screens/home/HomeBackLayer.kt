@@ -38,7 +38,6 @@ import com.alpaca.hyperpong.presentation.common.FilterChipRow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeBackLayer(
-    eventos: List<Evento>,
     selectedTab: HomeTab,
     onTabSelected: (HomeTab) -> Unit
 ) {
@@ -65,7 +64,6 @@ fun HomeBackLayer(
             }
         }
         HomeBackLayerContent(
-            eventos = eventos,
             selectedTab = selectedTab,
             onDateButtonClicked = { showDatePicker = true }
         )
@@ -81,7 +79,6 @@ fun HomeBackLayer(
 
 @Composable
 private fun HomeBackLayerContent(
-    eventos: List<Evento>,
     selectedTab: HomeTab,
     onDateButtonClicked: () -> Unit
 ) {
