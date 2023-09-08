@@ -4,7 +4,6 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import com.alpaca.hyperpong.domain.repository.RealtimeRepository
 import com.alpaca.hyperpong.domain.repository.RetornoEventos
-import kotlinx.coroutines.CoroutineScope
 import javax.inject.Inject
 
 class RealtimeRepositoryImpl @Inject constructor(
@@ -12,7 +11,7 @@ class RealtimeRepositoryImpl @Inject constructor(
     private val config: PagingConfig
     ) :
     RealtimeRepository {
-    override fun getEventos(viewModelScope: CoroutineScope): RetornoEventos =
+    override fun getEventos(): RetornoEventos =
         Pager(
             config = config
         ) {

@@ -14,11 +14,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val realtimeUseCases: RealtimeUseCases
+    realtimeUseCases: RealtimeUseCases
 ) : ViewModel() {
-    private val _eventos
-        get() = realtimeUseCases.getEventosUseCase(viewModelScope = viewModelScope)
-            .cachedIn(viewModelScope)
+     val _eventos = realtimeUseCases.getEventosUseCase().cachedIn(viewModelScope)
+
     val eventosConcluidos: Flow<PagingData<Evento>> = _eventos.map { pagingData ->
         pagingData.filter { evento ->
             evento.isConcluido()

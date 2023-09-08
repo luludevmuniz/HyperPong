@@ -12,17 +12,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -50,32 +46,37 @@ import com.alpaca.hyperpong.domain.model.Evento
 import com.alpaca.hyperpong.ui.theme.HyperPongTheme
 
 @Composable
-fun EventoItem(evento: Evento, onItemClicked: (String) -> Unit) {
-    ListItem(
-        modifier = Modifier.clickable { onItemClicked(evento.id) },
-        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.onSecondary),
-        leadingContent = {
-            AsyncImage(
-                modifier = Modifier.sizeIn(maxHeight = 56.dp, maxWidth = 56.dp),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(evento.imagem)
-                    .crossfade(true)
-                    .build(),
-                contentScale = ContentScale.FillBounds,
-                contentDescription = "Imagem do evento ${evento.nome}"
-            )
-        },
-        headlineContent = { Text(text = evento.nome) },
-        supportingContent = { Text(text = evento.dataInicioFormatada) },
-        trailingContent = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_bolt_sharp),
-                tint = evento.statusEvento.getColor(),
-                contentDescription = "Ícone Inscrições Abertas"
-            )
-        }
-    )
-    HorizontalDivider()
+fun EventoItem(evento: Evento?, onItemClicked: (String) -> Unit) {
+    evento?.let {
+        ListItem(
+            modifier = Modifier.clickable { onItemClicked(evento.id) },
+            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.onSecondary),
+            leadingContent = {
+                AsyncImage(
+                    modifier = Modifier.sizeIn(
+                        maxHeight = 56.dp,
+                        maxWidth = 56.dp
+                    ),
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(evento.imagem)
+                        .crossfade(true)
+                        .build(),
+                    contentScale = ContentScale.FillBounds,
+                    contentDescription = "Imagem do evento ${evento.nome}"
+                )
+            },
+            headlineContent = { Text(text = evento.nome) },
+            supportingContent = { Text(text = evento.dataInicioFormatada) },
+            trailingContent = {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_bolt_sharp),
+                    tint = evento.statusEvento.getColor(),
+                    contentDescription = "Ícone Inscrições Abertas"
+                )
+            }
+        )
+        HorizontalDivider()
+    }
 }
 
 @Preview(name = "Light Mode", showBackground = true)
@@ -106,12 +107,11 @@ fun ShimmerEffect() {
 
 @Composable
 fun ShimmerItem(alpha: Float) {
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-        color = Color.LightGray,
+        color = MaterialTheme.colorScheme.onSecondary,
         shape = RoundedCornerShape(size = 20.dp)
     ) {
         Row(
@@ -120,9 +120,9 @@ fun ShimmerItem(alpha: Float) {
         ) {
             Box(
                 modifier = Modifier
-                    .size(60.dp)
-                    .background(color = Color.Gray)
                     .alpha(alpha = alpha)
+                    .size(60.dp)
+                    .background(color = Color.LightGray)
             )
 
             Column(
@@ -137,23 +137,23 @@ fun ShimmerItem(alpha: Float) {
                         .fillMaxWidth(fraction = 0.7f)
                         .height(height = 20.dp)
                         .clip(RoundedCornerShape(size = 10.dp))
-                        .background(color = Color.Gray)
+                        .background(color = Color.LightGray)
                 )
                 Box(
                     modifier = Modifier
+                        .alpha(alpha = alpha)
                         .fillMaxWidth(fraction = 0.2f)
                         .height(height = 20.dp)
                         .clip(RoundedCornerShape(size = 10.dp))
-                        .background(color = Color.Gray)
-                        .alpha(alpha = alpha)
+                        .background(color = Color.LightGray)
                 )
             }
-
             Box(
                 modifier = Modifier
+                    .alpha(alpha = alpha)
                     .size(24.dp)
-                    .background(color = Color.Gray)
-                    .alpha(alpha = alpha),
+                    .clip(shape = RoundedCornerShape(percent = 50))
+                    .background(color = Color.LightGray)
             )
         }
     }

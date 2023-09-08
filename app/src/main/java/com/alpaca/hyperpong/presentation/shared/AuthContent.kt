@@ -14,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.Divider
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -126,7 +125,7 @@ fun AuthContent(
                 Text(text = "Continuar como convidado")
             }
 
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.padding(top = 12.dp),
                 color = MaterialTheme.colorScheme.onSurface
             )

@@ -55,7 +55,8 @@ fun HomeContent(
                 HomeTab.Eventos -> HomeFrontLayer(
                     categoria = selectedTab,
                     eventosConcluidos = eventosConcluidos,
-                    proximosEventos = proximosEventos
+                    proximosEventos = proximosEventos,
+                    isNetworkAvailable = true
                 ) { idEvento ->
                     onEventClicked(idEvento)
                 }
@@ -63,7 +64,8 @@ fun HomeContent(
                 HomeTab.Aulas -> HomeFrontLayer(
                     categoria = selectedTab,
                     eventosConcluidos = eventosConcluidos,
-                    proximosEventos = proximosEventos
+                    proximosEventos = proximosEventos,
+                    isNetworkAvailable = false
                 ) {
                     onAulaClicked()
                 }
