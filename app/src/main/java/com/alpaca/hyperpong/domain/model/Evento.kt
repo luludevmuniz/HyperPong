@@ -42,4 +42,11 @@ data class Evento(
             val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             return dataLocal.format(formatter)
         }
+
+    fun isConcluido(): Boolean {
+        val dataAPI = LocalDate.parse(this.dataInicio, DateTimeFormatter.ISO_DATE)
+        return dataAPI.isBefore(LocalDate.now()) || dataAPI.isEqual(LocalDate.now())
+    }
+
+    fun isFuturo(): Boolean = LocalDate.parse(this.dataInicio, DateTimeFormatter.ISO_DATE).isAfter(LocalDate.now())
 }

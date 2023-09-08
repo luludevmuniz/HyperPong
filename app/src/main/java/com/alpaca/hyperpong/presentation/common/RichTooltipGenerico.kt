@@ -1,17 +1,22 @@
 package com.alpaca.hyperpong.presentation.common
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedIconButton
-import androidx.compose.material3.RichTooltipBox
+import androidx.compose.material3.RichTooltip
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.rememberRichTooltipState
+import androidx.compose.material3.TooltipBox
+import androidx.compose.material3.TooltipDefaults
+import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -32,33 +37,46 @@ fun RichTooltipGenerico(
     textoAcao: String,
     onActionClicked: () -> Unit
 ) {
-    val tooltipState = rememberRichTooltipState(isPersistent = true)
+    val tooltipState = rememberTooltipState(isPersistent = true)
     val scope = rememberCoroutineScope()
+
     Box(
         modifier = modifier.fillMaxWidth(),
         contentAlignment = contentAligment
     ) {
-        RichTooltipBox(
-            tooltipState = tooltipState,
-            title = { Text(text = titulo) },
-            text = {
-                Text(text = descricao)
-            },
-            action = {
-                TextButton(
-                    onClick = {
-                        scope.launch {
-                            tooltipState.dismiss()
-                            onActionClicked()
+        TooltipBox(
+            positionProvider = TooltipDefaults.rememberPlainTooltipPositionProvider(),
+            tooltip = {
+                RichTooltip(
+                    action = {
+                        TextButton(
+                            onClick = {
+                                scope.launch {
+                                    tooltipState.dismiss()
+                                    onActionClicked()
+                                }
+                            }
+                        ) { Text(textoAcao) }
+                    },
+                    text = {
+                        Column(
+                            modifier = Modifier.padding(top = 12.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_bolt_sharp),
+                                contentDescription = null
+                            )
+                            Text(descricao)
                         }
                     }
-                ) { Text(textoAcao) }
-            }
+                )
+            },
+            state = tooltipState
         ) {
             OutlinedIconButton(
-                modifier = Modifier
-                    .size(size = 20.dp)
-                    .tooltipTrigger(),
+                modifier = Modifier.size(size = 20.dp),
                 border = BorderStroke(
                     width = Dp.Hairline,
                     color = MaterialTheme.colorScheme.onSurface

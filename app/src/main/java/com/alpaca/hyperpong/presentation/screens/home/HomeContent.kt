@@ -15,14 +15,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.alpaca.hyperpong.domain.model.Evento
 import com.alpaca.hyperpong.presentation.common.TopBarPadrao
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeContent(
+    homeViewModel: HomeViewModel = hiltViewModel(),
     onNavigationIconClicked: () -> Unit,
     onEventClicked: (String) -> Unit,
     onAulaClicked: () -> Unit
@@ -49,14 +48,23 @@ fun HomeContent(
             )
         },
         frontLayerContent = {
+            val eventosConcluidos = homeViewModel.eventosConcluidos.collectAsLazyPagingItems()
+            val proximosEventos = homeViewModel.proximosEventos.collectAsLazyPagingItems()
+
             when (selectedTab) {
                 HomeTab.Eventos -> HomeFrontLayer(
-                    categoria = selectedTab
+                    categoria = selectedTab,
+                    eventosConcluidos = eventosConcluidos,
+                    proximosEventos = proximosEventos
                 ) { idEvento ->
                     onEventClicked(idEvento)
                 }
 
-                HomeTab.Aulas -> HomeFrontLayer(aulas = aulas, categoria = selectedTab) {
+                HomeTab.Aulas -> HomeFrontLayer(
+                    categoria = selectedTab,
+                    eventosConcluidos = eventosConcluidos,
+                    proximosEventos = proximosEventos
+                ) {
                     onAulaClicked()
                 }
             }

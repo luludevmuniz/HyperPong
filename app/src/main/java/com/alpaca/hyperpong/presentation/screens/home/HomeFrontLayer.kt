@@ -1,38 +1,25 @@
 package com.alpaca.hyperpong.presentation.screens.home
 
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
-import com.alpaca.hyperpong.R
+import androidx.paging.compose.LazyPagingItems
 import com.alpaca.hyperpong.domain.model.Evento
+import com.alpaca.hyperpong.util.Response
 
 enum class CategoriaAula {
     Movimentacao, Reflexo, Criatividade
@@ -45,143 +32,69 @@ data class Aula(
     val categoria: CategoriaAula
 )
 
-val aulas = listOf(
-    Aula(
-        nome = "Aula Coletiva",
-        data = "24 de julho",
-        hora = "19h - 20:30h",
-        categoria = CategoriaAula.Movimentacao
-    ),
-    Aula(
-        nome = "Aula Particular",
-        data = "26 de julho",
-        hora = "18h - 19h",
-        categoria = CategoriaAula.Reflexo
-    ),
-    Aula(
-        nome = "Aula Coletiva",
-        data = "26 de julho",
-        hora = "19h - 20:30h",
-        categoria = CategoriaAula.Criatividade
-    )
-)
-
-
 @Composable
 fun HomeFrontLayer(
     modifier: Modifier = Modifier,
-    homeViewModel: HomeViewModel = hiltViewModel(),
-    aulas: List<Aula> = emptyList(),
     categoria: HomeTab,
+    loadState: Response<Response.Idle>,
+    eventosConcluidos: LazyPagingItems<Evento>,
+    proximosEventos: LazyPagingItems<Evento>,
     onItemClicked: (String) -> Unit
 ) {
-    val isTelaEventos = categoria == HomeTab.Eventos
-    Surface(
-        modifier = modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.secondaryContainer
-    ) {
-        Column(
-            modifier = Modifier.padding(
+    LazyColumn(
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = MaterialTheme.colorScheme.secondaryContainer)
+            .padding(
                 start = 24.dp,
                 end = 24.dp,
-                top = 16.dp
+                top = 32.dp
             )
-        ) {
-            Spacer(Modifier.height(16.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                val listState = rememberLazyListState()
-                val pagingEventos = homeViewModel.eventos.collectAsLazyPagingItems()
-                val refresh = pagingEventos.loadState.refresh
-                val append = pagingEventos.loadState.append
-
-                pagingEventos.loadState.apply {
-                    when {
-                        refresh is LoadState.Loading -> CircularProgressIndicator()
-                        refresh is LoadState.Error -> printErrorState(refresh)
-                        append is LoadState.Loading -> CircularProgressIndicator()
-                        append is LoadState.Error -> printErrorState(append)
+    ) {
+        if (categoria == HomeTab.Eventos) {
+            item {
+                Text(
+                    modifier = Modifier.padding(bottom = 16.dp),
+                    text = "Próximos Eventos",
+                    fontSize = 16.sp
+                )
+            }
+            when(loadState) {
+                is Response.Success -> {
+                    items(count = proximosEventos.itemCount) { index ->
+                        EventoItem(
+                            evento = proximosEventos[index]!!,
+                            onItemClicked = { idEvento ->
+                                onItemClicked(idEvento)
+                            }
+                        )
                     }
                 }
+                is Response.Error -> {
 
-                LazyColumn(state = listState) {
-                    items(count = pagingEventos.itemCount) { index ->
-                        val item = pagingEventos[index]
-                    }
-                    if (isTelaEventos) {
-                        item {
-                            Text(
-                                modifier = Modifier.padding( bottom = 16.dp),
-                                text = "Próximos Eventos",
-                                fontSize = 16.sp
-                            )
-                        }
-                        if (eventosFuturos.isNotEmpty()) {
-                            items(eventosFuturos) { evento ->
-                                ListItemEvento(
-                                    evento = evento,
-                                    onItemClicked = { idEvento ->
-                                        onItemClicked(idEvento)
-                                    }
-                                )
-                            }
-                        } else {
-                            //TODO: Apresentar item "Ainda não há eventos futuros cadastrados"
-                        }
-                        if (eventosConcluidos.isNotEmpty()) {
-                            item {
-                                Text(
-                                    modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
-                                    text = "Eventos Concluídos",
-                                    fontSize = 16.sp
-                                )
-                            }
-                            items(eventosConcluidos) { evento ->
-                                ListItemEvento(
-                                    evento = evento,
-                                    onItemClicked = { idEvento ->
-                                        onItemClicked(idEvento)
-                                    }
-                                )
-                            }
-                        }
-                    } else {
-                        items(aulas) { aula ->
-                            ListItemAula(aula)
-                        }
-                    }
                 }
+                is Response.Loading -> {
+
+                }
+                else -> {}
+            }
+            item {
+                Text(
+                    modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
+                    text = "Eventos Concluídos",
+                    fontSize = 16.sp
+                )
+            }
+            items(count = eventosConcluidos.itemCount) { index ->
+                EventoItem(
+                    evento = eventosConcluidos[index]!!,
+                    onItemClicked = { idEvento ->
+                        onItemClicked(idEvento)
+                    }
+                )
             }
         }
     }
-}
-
-@Composable
-private fun ListItemEvento(evento: Evento, onItemClicked: (String) -> Unit) {
-    ListItem(
-        modifier = Modifier.clickable { onItemClicked(evento.id) },
-        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.onSecondary),
-        leadingContent = {
-            AsyncImage(
-                modifier = Modifier.sizeIn(maxHeight = 56.dp, maxWidth = 56.dp),
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(evento.imagem)
-                    .crossfade(true)
-                    .build(),
-                contentScale = ContentScale.FillBounds,
-                contentDescription = "Imagem do evento ${evento.nome}"
-            )
-        },
-        headlineContent = { Text(text = evento.nome) },
-        supportingContent = { Text(text = evento.dataInicioFormatada) },
-        trailingContent = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_bolt_sharp),
-                tint = evento.statusEvento.getColor(),
-                contentDescription = "Ícone Inscrições Abertas"
-            )
-        }
-    )
-    HorizontalDivider()
 }
 
 @Composable
