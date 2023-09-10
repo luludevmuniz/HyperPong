@@ -1,6 +1,5 @@
 package com.alpaca.hyperpong.data.repository
 
-import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.alpaca.hyperpong.domain.model.Evento
@@ -38,10 +37,8 @@ class EventosPagingSource(private val database: DatabaseReference) :
                 nextKey = nextPage
             )
         } catch (e: TimeoutCancellationException) {
-            Log.d("PAGINACAO", "EventosPagingSource Exception: Timeout ao carregar eventos")
             LoadResult.Error(e)
         } catch (e: Exception) {
-            Log.d("PAGINACAO", "EventosPagingSource Exception: ${e.message}")
             LoadResult.Error(e)
         }
 }

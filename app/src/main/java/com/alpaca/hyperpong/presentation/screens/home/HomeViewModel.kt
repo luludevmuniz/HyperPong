@@ -23,6 +23,7 @@ class HomeViewModel @Inject constructor(
             evento.isConcluido()
         }
     }
+
     val proximosEventos: Flow<PagingData<Evento>> = _eventos.map { pagingData ->
         pagingData.filter { evento ->
             evento.isFuturo()
