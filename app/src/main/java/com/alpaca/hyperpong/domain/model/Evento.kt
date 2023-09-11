@@ -1,6 +1,7 @@
 package com.alpaca.hyperpong.domain.model
 
 import com.alpaca.hyperpong.util.StatusEvento
+import com.alpaca.hyperpong.util.TipoEvento
 import com.google.firebase.database.PropertyName
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -36,6 +37,15 @@ data class Evento(
             else -> StatusEvento.DESCONHECIDO
         }
 
+    val tipoEvento: TipoEvento
+        get() = when (tipo.toIntOrNull()) {
+            0 -> TipoEvento.COPA_HYPER
+            1 -> TipoEvento.TORNEIO_INERNO
+            2 -> TipoEvento.RACHAO
+            3 -> TipoEvento.BATE_BOLA
+            else -> TipoEvento.BATE_BOLA
+        }
+
     val dataInicioFormatada: String
         get() {
             val dataLocal = LocalDate.parse(dataInicio, DateTimeFormatter.ISO_DATE)
@@ -48,5 +58,6 @@ data class Evento(
         return dataAPI.isBefore(LocalDate.now()) || dataAPI.isEqual(LocalDate.now())
     }
 
-    fun isFuturo(): Boolean = LocalDate.parse(this.dataInicio, DateTimeFormatter.ISO_DATE).isAfter(LocalDate.now())
+    fun isFuturo(): Boolean =
+        LocalDate.parse(this.dataInicio, DateTimeFormatter.ISO_DATE).isAfter(LocalDate.now())
 }

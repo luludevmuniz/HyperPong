@@ -31,15 +31,19 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.alpaca.hyperpong.R
-import com.alpaca.hyperpong.domain.model.Evento
 import com.alpaca.hyperpong.presentation.common.DropdownFilterButton
 import com.alpaca.hyperpong.presentation.common.FilterChipRow
+import com.alpaca.hyperpong.util.Constantes.categoriasEventos
+import com.alpaca.hyperpong.util.FiltroData
+import com.alpaca.hyperpong.util.TipoEvento
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeBackLayer(
     selectedTab: HomeTab,
-    onTabSelected: (HomeTab) -> Unit
+    onEventTypeSelected: (TipoEvento) -> Unit,
+    onTabSelected: (HomeTab) -> Unit,
+    onDateChipClicked: (FiltroData) -> Unit
 ) {
     val datePickerState = rememberDatePickerState()
     var showDatePicker by remember {
@@ -65,7 +69,9 @@ fun HomeBackLayer(
         }
         HomeBackLayerContent(
             selectedTab = selectedTab,
-            onDateButtonClicked = { showDatePicker = true }
+            onDateButtonClicked = { showDatePicker = true },
+            onEventTypeSelected = { eventType -> onEventTypeSelected(eventType) },
+            onDateChipClicked = { filtro -> onDateChipClicked(filtro) }
         )
     }
     if (showDatePicker) {
@@ -80,7 +86,9 @@ fun HomeBackLayer(
 @Composable
 private fun HomeBackLayerContent(
     selectedTab: HomeTab,
-    onDateButtonClicked: () -> Unit
+    onDateButtonClicked: () -> Unit,
+    onEventTypeSelected: (TipoEvento) -> Unit,
+    onDateChipClicked: (FiltroData) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -92,25 +100,28 @@ private fun HomeBackLayerContent(
                 bottom = 32.dp
             ),
     ) {
-        var listaModalidades = emptyList<String>()
-        var listaNiveis: List<String>? = null
+        var modalidades = emptyList<String>()
+        var categorias: List<String>? = null
         when (selectedTab) {
             HomeTab.Eventos -> {
-                listaModalidades = listOf("Copa Hyper", "Rachão", "Torneio Interno", "Bate Bola")
-                listaNiveis = listOf("Iniciante", "Intermediário", "Avançado")
+                modalidades = TipoEvento.entries.map { it.toString() }
+                categorias = categoriasEventos
             }
 
             HomeTab.Aulas -> {
-                listaModalidades =
-                    listOf("Aula Individual", "Aula Em Dupla", "Aula Coletiva", "Treino Secreto")
+                modalidades = emptyList()
             }
         }
         HomeFilterButtons(
-            modalidades = listaModalidades,
-            categorias = listaNiveis,
-            onDateButtonClicked = { onDateButtonClicked() }
+            modalidades = modalidades,
+            categorias = categorias,
+            onDateButtonClicked = { onDateButtonClicked() },
+            onEventTypeSelected = { eventType -> onEventTypeSelected(eventType) }
         )
-        FilterChipRow(items = listOf("Futuros", "Concluídos"))
+        FilterChipRow(
+            items = FiltroData.entries.map { it.name },
+            onChipClicked = { filtro -> onDateChipClicked(FiltroData.valueOf(filtro)) }
+        )
     }
 }
 
@@ -118,7 +129,8 @@ private fun HomeBackLayerContent(
 private fun HomeFilterButtons(
     modalidades: List<String>,
     categorias: List<String>? = null,
-    onDateButtonClicked: () -> Unit
+    onDateButtonClicked: () -> Unit,
+    onEventTypeSelected: (TipoEvento) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 12.dp)
@@ -127,14 +139,16 @@ private fun HomeFilterButtons(
             modifier = Modifier.clip(shape = MaterialTheme.shapes.small),
             title = "Escolher Modalidades",
             leadingIcon = painterResource(id = R.drawable.ic_joystick),
-            listItens = modalidades
+            items = modalidades,
+            onItemSelected = { eventType -> onEventTypeSelected(TipoEvento.toEnum(eventType = eventType)) }
         )
         categorias?.let {
             DropdownFilterButton(
                 modifier = Modifier.clip(shape = MaterialTheme.shapes.small),
                 title = "Selecionar Categorias",
                 leadingIcon = painterResource(id = R.drawable.ic_settings_slow_motion),
-                listItens = it
+                items = it,
+                onItemSelected = {}
             )
         }
         FilledTonalButton(

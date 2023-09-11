@@ -1,5 +1,6 @@
 package com.alpaca.hyperpong.util
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -19,7 +20,7 @@ enum class StatusEvento {
     },
     DESCONHECIDO {
         @Composable
-        override fun getColor(): Color = Color.Black
+        override fun getColor(): Color = if (isSystemInDarkTheme()) Color.White else Color.Black
     };
 
     @Composable

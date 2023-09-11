@@ -23,7 +23,9 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun FilterChipRow(
     modifier: Modifier = Modifier,
-    items: List<String>
+    items: List<String>,
+    enabled: Boolean = false,
+    onChipClicked: (String) -> Unit
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -33,6 +35,7 @@ fun FilterChipRow(
         var selectedChips by remember { mutableStateOf(setOf<String>()) }
         items.forEach { item ->
             FilterChip(
+                enabled = enabled,
                 selected = item in selectedChips,
                 onClick = {
                     selectedChips = if (item in selectedChips) {
@@ -40,6 +43,7 @@ fun FilterChipRow(
                     } else {
                         selectedChips + item
                     }
+                    onChipClicked(item)
                 },
                 label = {
                     Text(text = item)

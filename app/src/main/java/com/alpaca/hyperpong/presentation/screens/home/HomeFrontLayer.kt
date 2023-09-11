@@ -2,212 +2,137 @@ package com.alpaca.hyperpong.presentation.screens.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import androidx.paging.compose.LazyPagingItems
 import com.alpaca.hyperpong.domain.model.Evento
 import com.alpaca.hyperpong.presentation.common.ErrorItem
+import com.alpaca.hyperpong.util.FiltroData
+import com.alpaca.hyperpong.util.FiltroData.Concluidos
+import com.alpaca.hyperpong.util.FiltroData.Futuros
 
 @Composable
 fun HomeFrontLayer(
     modifier: Modifier = Modifier,
     categoria: HomeTab,
-    proximosEventos: LazyPagingItems<Evento>,
-    eventosConcluidos: LazyPagingItems<Evento>,
-    isNetworkAvailable: Boolean,
+    loadState: CombinedLoadStates,
+    proximosEventos: List<Evento>,
+    eventosConcluidos: List<Evento>,
+    dateFilters: List<FiltroData> = emptyList(),
+    onRetryClicked: () -> Unit,
     onItemClicked: (String) -> Unit
 ) {
-    val itensCarregados by lazy {
-        mutableStateOf(false)
-    }
-    LazyColumn(
+    Column(
         modifier = modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.secondaryContainer)
-            .padding(
-                start = 24.dp,
-                end = 24.dp,
-                top = 32.dp
-            )
+            .padding(horizontal = 24.dp)
     ) {
-        item {
-            Text(
-                modifier = Modifier.padding(bottom = 16.dp),
-                text = "Próximos Eventos",
-                fontSize = 16.sp
-            )
-        }
-
-        items(count = proximosEventos.itemCount) { index ->
-            itensCarregados.value = true
-            EventoItem(evento = proximosEventos[index], onItemClicked = { idEvento ->
-                onItemClicked(idEvento)
-            })
-        }
-
-        when (proximosEventos.loadState.prepend) {
-            is LoadState.Loading -> {
+        LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
+            if (dateFilters.contains(Futuros) && proximosEventos.isNotEmpty()) {
                 item {
-                    repeat(2) {
-                        ShimmerEffect()
-                        Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        modifier = Modifier.padding(
+                            top = 24.dp,
+                            bottom = 16.dp
+                        ),
+                        text = "Próximos Eventos",
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        fontSize = 16.sp
+                    )
+                }
+                items(items = proximosEventos) { evento ->
+                    EventoItem(evento = evento, onItemClicked = { idEvento ->
+                        onItemClicked(idEvento)
+                    })
+                }
+            }
+
+            if (dateFilters.contains(Concluidos) && eventosConcluidos.isNotEmpty()) {
+                item {
+                    Text(
+                        modifier = Modifier.padding(
+                            top = 24.dp,
+                            bottom = 16.dp
+                        ),
+                        text = "Eventos Concluídos",
+                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        fontSize = 16.sp
+                    )
+                }
+
+                items(items = eventosConcluidos) { evento ->
+                    EventoItem(evento = evento) { idEvento ->
+                        onItemClicked(idEvento)
                     }
+                }
+            }
+        }
+
+        when (loadState.prepend) {
+            is LoadState.Loading -> {
+                repeat(2) {
+                    ShimmerEffect(modifier = Modifier.padding(bottom = 8.dp))
                 }
             }
 
             is LoadState.Error -> {
-                item {
-                    ErrorItem {
-                        proximosEventos.retry()
-                    }
+                ErrorItem {
+                    onRetryClicked()
                 }
             }
 
             else -> {}
         }
 
-        when (proximosEventos.loadState.append) {
+        when (loadState.append) {
             is LoadState.Loading -> {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(12.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
                 }
             }
 
             is LoadState.Error -> {
-                item {
-                    ErrorItem {
-                        proximosEventos.retry()
-                    }
+                ErrorItem {
+                    onRetryClicked()
                 }
             }
 
             else -> {}
         }
 
-        when (proximosEventos.loadState.refresh) {
+        when (loadState.refresh) {
             is LoadState.Loading -> {
-                item {
-                    repeat(2) {
-                        ShimmerEffect()
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
+                repeat(2) {
+                    ShimmerEffect(modifier = Modifier.padding(bottom = 8.dp))
                 }
             }
 
             is LoadState.Error -> {
-                item {
-                    ErrorItem {
-                        proximosEventos.retry()
-                    }
+                ErrorItem {
+                    onRetryClicked()
                 }
             }
 
-            else -> {}
-        }
-
-
-        item {
-            Text(
-                modifier = Modifier.padding(top = 24.dp, bottom = 16.dp),
-                text = "Eventos Concluídos",
-                fontSize = 16.sp
-            )
-        }
-
-        items(count = eventosConcluidos.itemCount) { index ->
-            EventoItem(evento = eventosConcluidos[index], onItemClicked = { idEvento ->
-                onItemClicked(idEvento)
-            })
-        }
-
-        when (eventosConcluidos.loadState.prepend) {
-            is LoadState.Loading -> {
-                item {
-                    repeat(2) {
-                        ShimmerEffect()
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-                }
-            }
-
-            is LoadState.Error -> {
-                item {
-                    ErrorItem {
-                        eventosConcluidos.retry()
-                    }
-                }
-            }
-
-            is LoadState.NotLoading -> {}
-            else -> {}
-        }
-
-        when (eventosConcluidos.loadState.append) {
-            is LoadState.Loading -> {
-                item {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(12.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
-                }
-            }
-
-            is LoadState.Error -> {
-                item {
-                    ErrorItem {
-                        eventosConcluidos.retry()
-                    }
-                }
-            }
-
-            is LoadState.NotLoading -> {}
-            else -> {}
-        }
-
-        when (eventosConcluidos.loadState.refresh) {
-            is LoadState.Loading -> {
-                item {
-                    repeat(2) {
-                        ShimmerEffect()
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
-                }
-            }
-
-            is LoadState.Error -> {
-                item {
-                    ErrorItem {
-                        eventosConcluidos.retry()
-                    }
-                }
-            }
-
-            is LoadState.NotLoading -> {}
             else -> {}
         }
     }

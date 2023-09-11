@@ -23,9 +23,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ErrorItem(onRetryClicked: () -> Unit) {
+fun ErrorItem(
+    modifier: Modifier = Modifier,
+    onRetryClicked: () -> Unit
+) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(30))
             .background(color = MaterialTheme.colorScheme.errorContainer)

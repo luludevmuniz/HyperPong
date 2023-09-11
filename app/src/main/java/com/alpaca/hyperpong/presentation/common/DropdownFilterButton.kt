@@ -36,7 +36,9 @@ fun DropdownFilterButton(
     title: String,
     leadingIcon: Painter,
     trailingIcon: Painter? = painterResource(id = R.drawable.ic_play_arrow),
-    listItens: List<String>
+    items: List<String>,
+    enabled: Boolean = false,
+    onItemSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
     val trailingIconRotation by animateFloatAsState(targetValue = if (expanded) 90f else 0f,
@@ -45,13 +47,14 @@ fun DropdownFilterButton(
 
     ExposedDropdownMenuBox(
         expanded = expanded,
-        onExpandedChange = { expanded = !expanded }
+        onExpandedChange = { if (enabled) expanded = !expanded }
     ) {
         FilledTonalButton(
             modifier = modifier
                 .fillMaxWidth()
                 .background(color = MaterialTheme.colorScheme.surface)
                 .menuAnchor(),
+            enabled = false,
             onClick = {
             },
             shape = ShapeDefaults.ExtraSmall,
@@ -82,7 +85,7 @@ fun DropdownFilterButton(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                listItens.forEach { item ->
+                items.forEach { item ->
                     var menuItemSelected by remember { mutableStateOf(false) }
                     val menuItemTrailingIcon = if (menuItemSelected) Icons.Default.Check
                     else Icons.Default.Add
@@ -96,12 +99,13 @@ fun DropdownFilterButton(
                                 tint = MaterialTheme.colorScheme.onSurface
                             )
                         },
-                        onClick = { menuItemSelected = !menuItemSelected }
+                        onClick = {
+                            menuItemSelected = !menuItemSelected
+                            onItemSelected(item)
+                        }
                     )
-
                 }
             }
-
         }
     }
 }

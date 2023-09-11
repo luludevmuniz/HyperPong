@@ -93,7 +93,7 @@ fun EventoItemPreview() {
 }
 
 @Composable
-fun ShimmerEffect() {
+fun ShimmerEffect(modifier: Modifier = Modifier) {
     val transition = rememberInfiniteTransition(label = "")
     val alphaAnim by transition.animateFloat(
         initialValue = 1f, targetValue = 0f, animationSpec = infiniteRepeatable(
@@ -102,13 +102,19 @@ fun ShimmerEffect() {
             ), repeatMode = RepeatMode.Reverse
         ), label = ""
     )
-    ShimmerItem(alpha = alphaAnim)
+    ShimmerItem(
+        modifier = modifier,
+        alpha = alphaAnim
+    )
 }
 
 @Composable
-fun ShimmerItem(alpha: Float) {
+fun ShimmerItem(
+    modifier: Modifier = Modifier,
+    alpha: Float
+) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight(),
         color = MaterialTheme.colorScheme.onSecondary,
