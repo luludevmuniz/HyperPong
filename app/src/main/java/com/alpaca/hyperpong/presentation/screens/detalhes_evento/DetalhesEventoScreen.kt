@@ -114,35 +114,38 @@ fun DetalhesEventoScreen(
                             bottom = 16.dp
                         )
                 ) {
-                    Column(modifier = Modifier.background(color = MaterialTheme.colorScheme.primaryContainer)) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = MaterialTheme.colorScheme.primaryContainer),
+                        verticalArrangement = Arrangement.spacedBy(11.dp)
+                    ) {
                         Row(
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            ItemIconeTexto(
-                                icone = painterResource(id = R.drawable.ic_money_value),
-                                texto = "Valor: R$ 50,00"
-                            )
-                            ItemIconeTexto(
-                                icone = painterResource(id = R.drawable.ic_subscription_open),
-                                texto = "Participantes: 9/16"
-                            )
+                            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                                ItemIconeTexto(
+                                    icone = painterResource(id = R.drawable.ic_money_value),
+                                    texto = "Valor: R$ 50,00"
+                                )
+                                ItemIconeTexto(
+                                    icone = painterResource(id = R.drawable.ic_event_day),
+                                    texto = "Data: ${evento?.dataInicioFormatada}"
+                                )
+
+                            }
+                            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                                ItemIconeTexto(
+                                    icone = painterResource(id = R.drawable.ic_subscription_open),
+                                    texto = "Participantes: 9/16"
+                                )
+                                ItemIconeTexto(
+                                    icone = painterResource(id = R.drawable.ic_alarm),
+                                    texto = "Horário: ${evento?.hora}"
+                                )
+                            }
                         }
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            ItemIconeTexto(
-                                icone = painterResource(id = R.drawable.ic_event_day),
-                                texto = "Data: ${evento?.dataInicioFormatada}"
-                            )
-                            ItemIconeTexto(
-                                icone = painterResource(id = R.drawable.ic_alarm),
-                                texto = "Horário: ${evento?.hora}"
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
                         LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                             items(evento?.categorias.orEmpty()) { categoria ->
                                 ElevatedSuggestionChip(
@@ -234,12 +237,12 @@ fun ModalInscreverEvento(
                 .clickable {
                     onCopyPix(AnnotatedString(codigoPix))
                 }
-                .background(color = MaterialTheme.colorScheme.secondaryContainer)
+                .background(color = MaterialTheme.colorScheme.primaryContainer)
                 .border(width = 0.5.dp, color = Color.Black, shape = RoundedCornerShape(5.dp))
                 .padding(12.dp),
                 text = codigoPix,
                 textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onSecondaryContainer)
+                color = MaterialTheme.colorScheme.onPrimaryContainer)
             TextButton(modifier = Modifier.fillMaxWidth(),
                 onClick = { onCopyPix(AnnotatedString(codigoPix)) }) {
                 Text(text = "Copiar código")

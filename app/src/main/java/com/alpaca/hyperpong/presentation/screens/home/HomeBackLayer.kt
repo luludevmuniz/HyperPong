@@ -56,7 +56,7 @@ fun HomeBackLayer(
     ) {
         TabRow(
             selectedTabIndex = selectedTab.ordinal,
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+            containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.primary
         ) {
             HomeTab.entries.forEach { tab ->

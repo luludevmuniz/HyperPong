@@ -20,7 +20,7 @@ fun TopBarPadrao(titulo: String, onNavigationIconClick: () -> Unit) {
         navigationIcon = {
             IconButton(onClick = { onNavigationIconClick() }) {
                 Icon(
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     imageVector = Icons.Default.Menu,
                     contentDescription = "Menu Icon"
                 )
@@ -32,7 +32,7 @@ fun TopBarPadrao(titulo: String, onNavigationIconClick: () -> Unit) {
         actions = {
             IconButton(onClick = { }) {
                 Icon(
-                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
                     imageVector = Icons.Default.Person,
                     contentDescription = "Menu Icon"
                 )

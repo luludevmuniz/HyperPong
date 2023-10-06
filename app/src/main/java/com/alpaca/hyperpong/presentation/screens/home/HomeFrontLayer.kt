@@ -39,7 +39,7 @@ fun HomeFrontLayer(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.secondaryContainer)
+            .background(color = MaterialTheme.colorScheme.primaryContainer)
             .padding(horizontal = 24.dp)
     ) {
         LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
@@ -51,7 +51,7 @@ fun HomeFrontLayer(
                             bottom = 16.dp
                         ),
                         text = "Próximos Eventos",
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontSize = 16.sp
                     )
                 }
@@ -70,7 +70,7 @@ fun HomeFrontLayer(
                             bottom = 16.dp
                         ),
                         text = "Eventos Concluídos",
-                        color = MaterialTheme.colorScheme.onSecondaryContainer,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontSize = 16.sp
                     )
                 }

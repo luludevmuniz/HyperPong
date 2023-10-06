@@ -50,7 +50,7 @@ fun EventoItem(evento: Evento?, onItemClicked: (String) -> Unit) {
     evento?.let {
         ListItem(
             modifier = Modifier.clickable { onItemClicked(evento.id) },
-            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.onSecondary),
+            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.onPrimary),
             leadingContent = {
                 AsyncImage(
                     modifier = Modifier.sizeIn(
@@ -117,7 +117,7 @@ fun ShimmerItem(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight(),
-        color = MaterialTheme.colorScheme.onSecondary,
+        color = MaterialTheme.colorScheme.onPrimary,
         shape = RoundedCornerShape(size = 20.dp)
     ) {
         Row(

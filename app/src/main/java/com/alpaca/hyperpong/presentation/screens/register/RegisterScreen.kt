@@ -38,7 +38,7 @@ fun RegisterScreen(
         AuthContent(
             modifier = Modifier
                 .padding(paddingValues = paddingValues)
-                .background(color = MaterialTheme.colorScheme.secondaryContainer),
+                .background(color = MaterialTheme.colorScheme.primaryContainer),
             loadingRequest = loadingRequest,
             logoColor = MaterialTheme.colorScheme.onSecondary,
             buttonText = "Registrar",

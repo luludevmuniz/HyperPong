@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -37,7 +38,7 @@ fun DropdownFilterButton(
     leadingIcon: Painter,
     trailingIcon: Painter? = painterResource(id = R.drawable.ic_play_arrow),
     items: List<String>,
-    enabled: Boolean = false,
+    enabled: Boolean = true,
     onItemSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -52,9 +53,8 @@ fun DropdownFilterButton(
         FilledTonalButton(
             modifier = modifier
                 .fillMaxWidth()
-                .background(color = MaterialTheme.colorScheme.surface)
                 .menuAnchor(),
-            enabled = false,
+            enabled = enabled,
             onClick = {
             },
             shape = ShapeDefaults.ExtraSmall,

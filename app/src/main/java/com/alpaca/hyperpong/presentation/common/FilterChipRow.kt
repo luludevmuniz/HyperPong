@@ -24,7 +24,7 @@ import androidx.compose.ui.unit.dp
 fun FilterChipRow(
     modifier: Modifier = Modifier,
     items: List<String>,
-    enabled: Boolean = false,
+    enabled: Boolean = true,
     onChipClicked: (String) -> Unit
 ) {
     Row(
