@@ -5,6 +5,6 @@ import com.alpaca.hyperpong.domain.repository.AuthRepository
 class LogarComEmailESenhaUseCase(
     private val repository: AuthRepository
 ) {
-    suspend operator fun invoke(email: String, senha: String) =
-        repository.logarComEmailESenha(email = email, senha = senha)
+    suspend operator fun invoke(email: String, password: String) =
+        repository.logarComEmailESenha(email = email, password = password)
 }

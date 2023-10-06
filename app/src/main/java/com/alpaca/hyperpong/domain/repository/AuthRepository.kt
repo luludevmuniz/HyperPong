@@ -1,5 +1,6 @@
 package com.alpaca.hyperpong.domain.repository
 
+import com.alpaca.hyperpong.domain.model.User
 import com.alpaca.hyperpong.util.Response
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.CoroutineScope
@@ -17,11 +18,11 @@ typealias RetornoAuthState = StateFlow<Boolean>
 interface AuthRepository {
     val currentUser: FirebaseUser?
 
-    suspend fun registrarUsuarioComEmailESenha(email: String, senha: String): RetornoRegistrarComEmailESenha
+    suspend fun signUp(user: User): RetornoRegistrarComEmailESenha
 
     suspend fun logarUsuarioAnonimo(): RetornoLoginAnonimo
 
-    suspend fun logarComEmailESenha(email: String, senha: String): RetornoLoginComEmailESenha
+    suspend fun logarComEmailESenha(email: String, password: String): RetornoLoginComEmailESenha
 
     suspend fun enviarEmailDeVerificacao(): RetornoEnviarEmaiLDeVerificacao
 

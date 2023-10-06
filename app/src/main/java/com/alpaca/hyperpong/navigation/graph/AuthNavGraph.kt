@@ -15,7 +15,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
     ) {
         composable(route = AuthScreen.Login.route) {
             LoginScreen(
-                onSignUpClick = {
+                onSignUpClicked = {
                     navController.navigate(route = AuthScreen.Register.route)
                 },
                 onAuthenticaded = {

@@ -2,6 +2,7 @@ package com.alpaca.hyperpong.presentation.shared
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.alpaca.hyperpong.domain.model.User
 import com.alpaca.hyperpong.domain.use_case.authentication.AuthUseCases
 import com.alpaca.hyperpong.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,19 +26,21 @@ class AuthViewModel @Inject constructor(
 
     val isUsuarioAutenticado get() = authUseCases.isUsuarioAutenticadoUseCase()
     val isEmailVerificado get() = authUseCases.isEmailVerificadoUseCase()
+
     //TODO: O que fazer com esse getAuthState?
     fun getAuthState() = authUseCases.getAuthStateUseCase(viewModelScope = viewModelScope)
-    fun registrarUsuarioComEmailESenha(email: String, senha: String) {
+
+    fun signUp(user: User) {
         _response.value = Response.Loading
         viewModelScope.launch {
-            _response.value = authUseCases.registrarUsuarioComEmailESenhaUseCase(email = email, senha = senha)
+            _response.value = authUseCases.signUp(user = user)
         }
     }
 
-    fun logarComEmailESenha(email: String, senha: String) {
+    fun signIn(email: String, password: String) {
         _response.value = Response.Loading
         viewModelScope.launch {
-            _response.value = authUseCases.logarComEmailESenhaUseCase(email = email, senha = senha)
+            _response.value = authUseCases.signInUseCase(email = email, password = password)
         }
     }
 

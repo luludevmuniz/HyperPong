@@ -1,6 +1,8 @@
 package com.alpaca.hyperpong.data.repository
 
+import com.alpaca.hyperpong.domain.model.User
 import com.alpaca.hyperpong.domain.repository.AuthRepository
+import com.alpaca.hyperpong.domain.repository.FirestoreRepository
 import com.alpaca.hyperpong.domain.repository.RetornoAuthState
 import com.alpaca.hyperpong.domain.repository.RetornoDeletarUsuario
 import com.alpaca.hyperpong.domain.repository.RetornoEnviarEmaiLDeVerificacao
@@ -22,18 +24,31 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val auth: FirebaseAuth
+    private val auth: FirebaseAuth,
+    private val db: FirestoreRepository
 ) : AuthRepository {
 
     override val currentUser: FirebaseUser?
         get() = auth.currentUser
 
-    override suspend fun registrarUsuarioComEmailESenha(
-        email: String,
-        senha: String
-    ): RetornoRegistrarComEmailESenha {
+    override suspend fun signUp(user: User): RetornoRegistrarComEmailESenha {
         return try {
-            auth.createUserWithEmailAndPassword(email, senha).await()
+            auth.createUserWithEmailAndPassword(user.email, user.password).addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    currentUser?.let {
+                        user.uid = it.uid
+                        db.signIn(user = user) { response ->
+                            if (response is Success) {
+                                Success(true)
+                            } else {
+                                Success(false)
+                            }
+                        }
+                    }
+                } else {
+                    Error(task.exception?.message ?: ERROR_MESSAGE)
+                }
+            }
             Success(true)
         } catch (e: Exception) {
             Error(e.message ?: ERROR_MESSAGE)
@@ -54,10 +69,10 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun logarComEmailESenha(
         email: String,
-        senha: String
+        password: String
     ): RetornoLoginComEmailESenha {
         return try {
-            auth.signInWithEmailAndPassword(email, senha).await()
+            auth.signInWithEmailAndPassword(email, password).await()
             Success(true)
         } catch (e: Exception) {
             Error(e.message ?: ERROR_MESSAGE)

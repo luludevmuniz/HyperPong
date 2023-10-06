@@ -10,7 +10,7 @@ import com.alpaca.hyperpong.domain.use_case.authentication.is_usuario_autenticad
 import com.alpaca.hyperpong.domain.use_case.authentication.logar_com_email_e_senha.LogarComEmailESenhaUseCase
 import com.alpaca.hyperpong.domain.use_case.authentication.logar_usuario_anonimo.LogarUsuarioAnonimoUseCase
 import com.alpaca.hyperpong.domain.use_case.authentication.recarregar_usuario.RecarregarUsuarioUseCase
-import com.alpaca.hyperpong.domain.use_case.authentication.registrar_usuario_com_email_e_senha.RegistrarUsuarioComEmailESenhaUseCase
+import com.alpaca.hyperpong.domain.use_case.authentication.registrar_usuario_com_email_e_senha.SignUpUseCase
 
 data class AuthUseCases(
     val deletarUsuarioUseCase: DeletarUsuarioUseCase,
@@ -20,8 +20,8 @@ data class AuthUseCases(
     val getAuthStateUseCase: GetAuthStateUseCase,
     val isEmailVerificadoUseCase: IsEmailVerificadoUseCase,
     val isUsuarioAutenticadoUseCase: IsUsuarioAutenticadoUseCase,
-    val logarComEmailESenhaUseCase: LogarComEmailESenhaUseCase,
+    val signInUseCase: LogarComEmailESenhaUseCase,
     val logarUsuarioAnonimoUseCase: LogarUsuarioAnonimoUseCase,
     val recarregarUsuarioUseCase: RecarregarUsuarioUseCase,
-    val registrarUsuarioComEmailESenhaUseCase: RegistrarUsuarioComEmailESenhaUseCase
+    val signUp: SignUpUseCase
 )
