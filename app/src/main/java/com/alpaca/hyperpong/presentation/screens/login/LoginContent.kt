@@ -1,6 +1,7 @@
 package com.alpaca.hyperpong.presentation.screens.login
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -46,9 +48,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.alpaca.hyperpong.R
 import com.alpaca.hyperpong.presentation.common.RichTooltipGenerico
+import com.alpaca.hyperpong.ui.theme.HyperPongTheme
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -57,7 +61,7 @@ fun LoginContent(
     isLoading: Boolean,
     onSignUpClicked: () -> Unit,
     onSignInClicked: (String, String) -> Unit
-    ) {
+) {
     var email by rememberSaveable { mutableStateOf("") }
     var senha by rememberSaveable { mutableStateOf("") }
     var isSenhaVisivel by rememberSaveable { mutableStateOf(false) }
@@ -95,9 +99,11 @@ fun LoginContent(
                 textoAcao = "Saiba mais",
                 onActionClicked = {}
             )
-            Column {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
                 OutlinedTextField(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .widthIn(max = 488.dp)
+                        .fillMaxWidth(),
                     value = email,
                     onValueChange = { inputText ->
                         isEmailComErro = inputText.isBlank()
@@ -151,6 +157,7 @@ fun LoginContent(
                 )
                 OutlinedTextField(
                     modifier = Modifier
+                        .widthIn(max = 488.dp)
                         .fillMaxWidth()
                         .focusRequester(focusRequester = focusRequester),
                     value = senha,
@@ -172,9 +179,10 @@ fun LoginContent(
                         )
                     },
                     trailingIcon = {
-                        val image = if (isSenhaComErro) painterResource(id = R.drawable.ic_error_filled)
-                        else if (isSenhaVisivel) painterResource(id = R.drawable.ic_visibility)
-                        else painterResource(id = R.drawable.ic_visibility_off)
+                        val image =
+                            if (isSenhaComErro) painterResource(id = R.drawable.ic_error_filled)
+                            else if (isSenhaVisivel) painterResource(id = R.drawable.ic_visibility)
+                            else painterResource(id = R.drawable.ic_visibility_off)
 
                         val description = if (isSenhaComErro) "error"
                         else if (isSenhaVisivel) "Esconder senha"
@@ -196,7 +204,9 @@ fun LoginContent(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
                 Button(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .widthIn(max = 320.dp)
+                        .fillMaxWidth(),
                     enabled = !isLoading,
                     onClick = {
                         isEmailComErro = email.isBlank()
@@ -211,7 +221,9 @@ fun LoginContent(
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .widthIn(max = 488.dp)
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 HorizontalDivider(
@@ -231,7 +243,9 @@ fun LoginContent(
             }
 
             OutlinedButton(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .widthIn(max = 320.dp)
+                    .fillMaxWidth(),
                 onClick = { }
             ) {
                 Text(text = "Continuar como convidado")
@@ -249,5 +263,17 @@ fun LoginContent(
                 }
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun LoginContentPrev() {
+    HyperPongTheme {
+        LoginContent(
+            modifier = Modifier.background(color = MaterialTheme.colorScheme.primaryContainer),
+            isLoading = false,
+            onSignInClicked = { _, _ -> },
+            onSignUpClicked = {})
     }
 }

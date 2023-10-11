@@ -24,6 +24,8 @@ class AuthViewModel @Inject constructor(
         getAuthState()
     }
 
+    //TODO: Necessário refatorar código para somente logar caso o usuário seja registrado com sucesso no banco
+    //TODO: Fazer validação ao logar para ver se o usuário existe no firestore.
     val isUsuarioAutenticado get() = authUseCases.isUsuarioAutenticadoUseCase()
     val isEmailVerificado get() = authUseCases.isEmailVerificadoUseCase()
 
