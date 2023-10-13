@@ -1,4 +1,4 @@
-package com.alpaca.hyperpong.domain.model
+package com.alpaca.hyperpong.domain.model.firestore
 
 data class User(
     val name: String,

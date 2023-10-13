@@ -52,7 +52,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.alpaca.hyperpong.R
-import com.alpaca.hyperpong.domain.model.User
+import com.alpaca.hyperpong.domain.model.firestore.User
 import com.alpaca.hyperpong.presentation.common.RichTooltipGenerico
 
 @OptIn(ExperimentalComposeUiApi::class)

@@ -1,7 +1,7 @@
 package com.alpaca.hyperpong.util
 
 object Constantes {
-    const val GALAX_PAY_URL = ""
+    const val CLOUD_FUNCTIONS_URL = "https://southamerica-east1-hyper-pong-eafbc.cloudfunctions.net/"
 
     const val TAMANHO_PAGINA = 10
 

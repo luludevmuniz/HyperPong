@@ -1,26 +1,25 @@
 package com.alpaca.hyperpong.presentation.screens.detalhes_evento
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.ChipColors
 import androidx.compose.material3.ElevatedSuggestionChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -36,43 +35,42 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.ClipboardManager
-import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight.Companion.Bold
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.alpaca.hyperpong.R
+import com.alpaca.hyperpong.domain.model.cloud_functions.Customer
+import com.alpaca.hyperpong.domain.model.cloud_functions.request_body.GetPaymentUrlRequestBody
 import com.alpaca.hyperpong.presentation.common.ItemIconeTexto
 import com.alpaca.hyperpong.presentation.common.TopBarPadrao
-import kotlinx.coroutines.launch
+import com.alpaca.hyperpong.util.Response
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetalhesEventoScreen(
-    homeViewModel: DetalhesEventoViewModel = hiltViewModel(),
+    viewModel: DetalhesEventoViewModel = hiltViewModel(),
     eventoId: String,
     onNavigationIconClicked: () -> Unit
 ) {
-    homeViewModel.getEvento(id = eventoId)
-    val evento by homeViewModel.evento.collectAsStateWithLifecycle()
+    viewModel.getEvento(id = eventoId)
+    val evento by viewModel.evento.collectAsStateWithLifecycle()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var openBottomSheet by rememberSaveable { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
-    val clipboardManager: ClipboardManager = LocalClipboardManager.current
-    val scope = rememberCoroutineScope()
+    val response by viewModel.response.collectAsStateWithLifecycle()
+    var paymentUrl by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) }
+    val uriHandler = LocalUriHandler.current
 
     Scaffold(
         topBar = {
@@ -167,6 +165,19 @@ fun DetalhesEventoScreen(
                         }
                     }
                 }
+                when (val apiResponse = response) {
+                    is Response.Success -> {
+                        paymentUrl = apiResponse.data
+                        showDialog = true
+                    }
+
+                    is Response.Error -> paymentUrl = apiResponse.error
+                    Response.Idle -> {}
+                    Response.Loading -> {
+                        LinearProgressIndicator()
+                    }
+                }
+
                 Column(
                     modifier = Modifier.padding(24.dp),
                     verticalArrangement = Arrangement.spacedBy(24.dp)
@@ -193,16 +204,37 @@ fun DetalhesEventoScreen(
         }
 
         if (openBottomSheet) {
-            ModalInscreverEvento(sheetState = sheetState, onCopyPix = { codigoPix ->
+            ModalInscreverEvento(sheetState = sheetState, onSignInClicked = {
+                val body = GetPaymentUrlRequestBody(
+                    value = 1500,
+                    payday = viewModel.getTomorrowDay(),
+                    mainPaymentMethodId = "pix",
+                    Customer = Customer(myId = "pay-652937390fb2a5.16130871")
+                )
+                viewModel.getPaymentUrl(body = body)
                 openBottomSheet = false
-                clipboardManager.setText(codigoPix)
-                scope.launch {
-                    snackbarHostState.showSnackbar("Código pix copiado com sucesso!")
-                }
             }) {
                 openBottomSheet = false
             }
         }
+    }
+
+    if (showDialog) {
+        AlertDialog(
+            dismissButton = {
+                Button(onClick = { showDialog = false }) {
+                    Text(text = "Cancelar")
+                }
+            },
+            onDismissRequest = { showDialog = false },
+            confirmButton = {
+                Button(onClick = {
+                    uriHandler.openUri(paymentUrl)
+                }) {
+                    Text(text = "Confirmar")
+                }
+            }
+        )
     }
 }
 
@@ -211,10 +243,9 @@ fun DetalhesEventoScreen(
 fun ModalInscreverEvento(
     sheetState: SheetState,
     categorias: List<String> = emptyList(),
-    onCopyPix: (AnnotatedString) -> Unit,
+    onSignInClicked: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
-    val codigoPix = "123123123"
 
     ModalBottomSheet(sheetState = sheetState, onDismissRequest = { onDismissRequest() }) {
         Column(
@@ -229,23 +260,12 @@ fun ModalInscreverEvento(
                 }
             }
             Row {
-                Text(text = "Preço: R\$ 20,00")
+                Text(text = "Preço: R\$ 15,00")
             }
-            Text(text = "Código pix:")
-            Text(modifier = Modifier
-                .fillMaxWidth()
-                .clickable {
-                    onCopyPix(AnnotatedString(codigoPix))
-                }
-                .background(color = MaterialTheme.colorScheme.primaryContainer)
-                .border(width = 0.5.dp, color = Color.Black, shape = RoundedCornerShape(5.dp))
-                .padding(12.dp),
-                text = codigoPix,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colorScheme.onPrimaryContainer)
+            Text(text = "Ao clicar no botão de inscrição, você declara que concorda com nossa Política de Privacidade")
             TextButton(modifier = Modifier.fillMaxWidth(),
-                onClick = { onCopyPix(AnnotatedString(codigoPix)) }) {
-                Text(text = "Copiar código")
+                onClick = { onSignInClicked() }) {
+                Text(text = "Desejo me inscrever")
             }
         }
     }

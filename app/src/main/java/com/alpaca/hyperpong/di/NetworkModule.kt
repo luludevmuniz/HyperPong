@@ -1,7 +1,10 @@
 package com.alpaca.hyperpong.di
 
-import com.alpaca.hyperpong.data.remote.GalaxPayApi
-import com.alpaca.hyperpong.util.Constantes.GALAX_PAY_URL
+import com.alpaca.hyperpong.data.remote.CloudFunctionsApi
+import com.alpaca.hyperpong.data.repository.CloudFunctionsRepositoryImpl
+import com.alpaca.hyperpong.domain.repository.CloudFunctionsRepository
+import com.alpaca.hyperpong.util.Constantes.CLOUD_FUNCTIONS_URL
+import com.google.gson.GsonBuilder
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import dagger.Module
 import dagger.Provides
@@ -11,6 +14,7 @@ import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
@@ -29,16 +33,20 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideRetrofitInstance(okHttpClient: OkHttpClient): Retrofit {
-        val contentType = "application/json".toMediaType()
         return Retrofit.Builder()
-            .baseUrl(GALAX_PAY_URL)
+            .baseUrl(CLOUD_FUNCTIONS_URL)
             .client(okHttpClient)
-            .addConverterFactory(Json.asConverterFactory(contentType))
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideGalaxPayApi(retrofit: Retrofit): GalaxPayApi = retrofit.create(GalaxPayApi::class.java)
+    fun provideCloudFunctionsApi(retrofit: Retrofit): CloudFunctionsApi =
+        retrofit.create(CloudFunctionsApi::class.java)
 
+    @Provides
+    @Singleton
+    fun provideCloudFunctionsRepository(cloudFunctionsApi: CloudFunctionsApi): CloudFunctionsRepository =
+        CloudFunctionsRepositoryImpl(cloudFunctionsApi = cloudFunctionsApi)
 }

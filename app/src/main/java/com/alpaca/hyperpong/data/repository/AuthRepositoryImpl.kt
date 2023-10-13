@@ -1,6 +1,6 @@
 package com.alpaca.hyperpong.data.repository
 
-import com.alpaca.hyperpong.domain.model.User
+import com.alpaca.hyperpong.domain.model.firestore.User
 import com.alpaca.hyperpong.domain.repository.AuthRepository
 import com.alpaca.hyperpong.domain.repository.FirestoreRepository
 import com.alpaca.hyperpong.domain.repository.RetornoAuthState

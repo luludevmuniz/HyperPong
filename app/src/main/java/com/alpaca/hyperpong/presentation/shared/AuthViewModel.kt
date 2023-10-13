@@ -2,7 +2,7 @@ package com.alpaca.hyperpong.presentation.shared
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alpaca.hyperpong.domain.model.User
+import com.alpaca.hyperpong.domain.model.firestore.User
 import com.alpaca.hyperpong.domain.use_case.authentication.AuthUseCases
 import com.alpaca.hyperpong.util.Response
 import dagger.hilt.android.lifecycle.HiltViewModel

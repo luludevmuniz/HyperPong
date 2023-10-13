@@ -1,11 +1,14 @@
 package com.alpaca.hyperpong.di
 
 import androidx.paging.PagingConfig
+import com.alpaca.hyperpong.data.remote.CloudFunctionsApi
 import com.alpaca.hyperpong.data.repository.AuthRepositoryImpl
+import com.alpaca.hyperpong.data.repository.CloudFunctionsRepositoryImpl
 import com.alpaca.hyperpong.data.repository.EventosPagingSource
 import com.alpaca.hyperpong.data.repository.FirestoreRepositoryImpl
 import com.alpaca.hyperpong.data.repository.RealtimeRepositoryImpl
 import com.alpaca.hyperpong.domain.repository.AuthRepository
+import com.alpaca.hyperpong.domain.repository.CloudFunctionsRepository
 import com.alpaca.hyperpong.domain.repository.FirestoreRepository
 import com.alpaca.hyperpong.domain.repository.RealtimeRepository
 import com.alpaca.hyperpong.domain.use_case.authentication.AuthUseCases
@@ -20,6 +23,8 @@ import com.alpaca.hyperpong.domain.use_case.authentication.logar_com_email_e_sen
 import com.alpaca.hyperpong.domain.use_case.authentication.logar_usuario_anonimo.LogarUsuarioAnonimoUseCase
 import com.alpaca.hyperpong.domain.use_case.authentication.recarregar_usuario.RecarregarUsuarioUseCase
 import com.alpaca.hyperpong.domain.use_case.authentication.registrar_usuario_com_email_e_senha.SignUpUseCase
+import com.alpaca.hyperpong.domain.use_case.cloud_functions.get_payment_url.CloudFunctionsUseCase
+import com.alpaca.hyperpong.domain.use_case.cloud_functions.get_payment_url.get_payment_url.GetPaymentUrlUseCase
 import com.alpaca.hyperpong.domain.use_case.realtime.RealtimeUseCases
 import com.alpaca.hyperpong.domain.use_case.realtime.get_eventos.GetEventosUseCase
 import com.alpaca.hyperpong.util.Constantes.TAMANHO_PAGINA
@@ -78,6 +83,11 @@ object RepositoryModule {
         RealtimeUseCases(
             getEventosUseCase = GetEventosUseCase(repository = repository)
         )
+
+    @Provides
+    @Singleton
+    fun provideCloudFunctionsUseCases(repository: CloudFunctionsRepository): CloudFunctionsUseCase =
+        CloudFunctionsUseCase(getPaymentUrlUseCase = GetPaymentUrlUseCase(repository = repository))
 
     @Provides
     @Singleton
