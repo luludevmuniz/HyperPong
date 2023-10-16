@@ -1,5 +1,6 @@
 package com.alpaca.hyperpong.presentation.shared
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alpaca.hyperpong.domain.model.firestore.User
@@ -43,6 +44,7 @@ class AuthViewModel @Inject constructor(
         _response.value = Response.Loading
         viewModelScope.launch {
             _response.value = authUseCases.signInUseCase(email = email, password = password)
+            Log.d("AUTH", "${response.value}")
         }
     }
 

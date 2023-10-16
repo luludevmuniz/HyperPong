@@ -32,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -70,7 +71,22 @@ fun DetalhesEventoScreen(
     val response by viewModel.response.collectAsStateWithLifecycle()
     var paymentUrl by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
+    var isLoading by remember { mutableStateOf(false) }
     val uriHandler = LocalUriHandler.current
+
+    LaunchedEffect(response) {
+        when (val apiResponse = response) {
+            is Response.Success -> {
+                paymentUrl = apiResponse.data
+                showDialog = true
+                isLoading = false
+            }
+
+            is Response.Error -> paymentUrl = apiResponse.error
+            Response.Idle -> isLoading = false
+            Response.Loading -> isLoading = true
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -165,17 +181,8 @@ fun DetalhesEventoScreen(
                         }
                     }
                 }
-                when (val apiResponse = response) {
-                    is Response.Success -> {
-                        paymentUrl = apiResponse.data
-                        showDialog = true
-                    }
-
-                    is Response.Error -> paymentUrl = apiResponse.error
-                    Response.Idle -> {}
-                    Response.Loading -> {
-                        LinearProgressIndicator()
-                    }
+                if (isLoading) {
+                        LinearProgressIndicator(modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp))
                 }
 
                 Column(
@@ -221,6 +228,12 @@ fun DetalhesEventoScreen(
 
     if (showDialog) {
         AlertDialog(
+            title = {
+                Text(text = "Prosseguir em seu navegador")
+            },
+            text = {
+                Text(text = "Ao clicar em prosseguir, você será redirecionado para seu navegador padrão, onde poderá finalizar o pagamento.")
+            },
             dismissButton = {
                 Button(onClick = { showDialog = false }) {
                     Text(text = "Cancelar")
@@ -231,7 +244,7 @@ fun DetalhesEventoScreen(
                 Button(onClick = {
                     uriHandler.openUri(paymentUrl)
                 }) {
-                    Text(text = "Confirmar")
+                    Text(text = "Prosseguir")
                 }
             }
         )
