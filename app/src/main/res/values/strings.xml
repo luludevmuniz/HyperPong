@@ -1,4 +1,42 @@
 <resources>
     <string name="app_name">Hyper Pong</string>
     <string name="lorem_ipsum">"Lorem ipsum dolor sit amet consectetur. At consectetur netus dignissim vitae morbi. Non dictumst justo non enim interdum sit. Diam mauris velit viverra sed viverra ut purus. Nulla sit id amet dolor auctor."</string>
+    <string name="termos_de_uso">
+    <b>Bem-vindo ao %1$s! </b>
+        \n
+    \nAo utilizar este aplicativo, você concorda com os seguintes termos e condições:
+        \n
+    \n1. <b> Cadastro e Conta de Usuário </b>
+       \n \u0020\u0020\u0020 - Ao se registrar e criar uma conta, você concorda em fornecer informações precisas e atualizadas.
+       \n \u0020\u0020\u0020 - Você é responsável pela segurança de suas credenciais de login.
+        \n
+    \n2. <b> Uso Aceitável </b>
+       \n \u0020\u0020\u0020 - Você concorda em usar este aplicativo de forma legal e ética.
+       \n \u0020\u0020\u0020 - Não deve violar nenhuma lei aplicável ou direito de terceiros.
+        \n
+   \n3. <b> Eventos e Inscrições </b>
+       \n \u0020\u0020\u0020 - Os eventos disponíveis no aplicativo são fornecidos apenas para fins informativos.
+       \n \u0020\u0020\u0020 - A inscrição em um evento está sujeita a disponibilidade e pode estar sujeita a taxas.
+        \n
+    \n4. <b> Pagamentos Externos </b>
+       \n \u0020\u0020\u0020 - Para se inscrever em um evento, você será redirecionado para a plataforma de pagamento externa %2$s.
+       \n \u0020\u0020\u0020 - %2$s é uma plataforma independente e tem seus próprios termos e políticas de privacidade.
+        \n
+    \n5. <b> Política de Cancelamento e Reembolso </b>
+       \n \u0020\u0020\u0020 - Reembolsos só serão processados ao entrar em contato diretamente com os professores via e-mail ou telefone.
+       \n \u0020\u0020\u0020 - A política de cancelamento é determinada pela %3$s.
+       \n \u0020\u0020\u0020 - Para mais informações, consulte a política específica do evento.
+        \n
+    \n6. <b> Propriedade Intelectual </b>
+       \n \u0020\u0020\u0020 - Este aplicativo e todo o seu conteúdo são protegidos por direitos autorais e outros direitos de propriedade intelectual.
+        \n
+    \n7. <b> Privacidade </b>
+       \n \u0020\u0020\u0020 - Para obter informações sobre como coletamos, usamos e compartilhamos seus dados, consulte nossa Política de Privacidade.
+        \n
+    \n8. <b> Alterações nos Termos </b>
+       \n \u0020\u0020\u0020 - Podemos atualizar estes termos a qualquer momento. Recomendamos que você os reveja periodicamente.
+        \n
+    \n9. <b> Contato </b>
+       \n \u0020\u0020\u0020 - Se você tiver alguma dúvida ou preocupação, entre em contato conosco em %4$s.
+</string>
 </resources>
