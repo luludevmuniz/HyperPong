@@ -1,4 +1,4 @@
-package com.alpaca.hyperpong.presentation.screens.detalhes_evento
+package com.alpaca.hyperpong.presentation.screens.about.event
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

@@ -79,13 +79,15 @@ fun FullScreenDialog(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    IconButton(onClick = {
-                        scope.launch {
-                            animateTrigger = false
-                            delay(200)
-                            onDismissRequest()
+                    IconButton(
+                        onClick = {
+                            scope.launch {
+                                animateTrigger = false
+                                delay(200)
+                                onDismissRequest()
+                            }
                         }
-                    }) {
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Close,
                             contentDescription = "Close dialog"

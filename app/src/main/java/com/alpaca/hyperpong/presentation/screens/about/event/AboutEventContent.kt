@@ -1,4 +1,4 @@
-package com.alpaca.hyperpong.presentation.screens.detalhes_evento
+package com.alpaca.hyperpong.presentation.screens.about.event
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -153,13 +153,6 @@ fun AboutEventContent(
                             }
                         }
                     }
-                }
-                if (isLoading) {
-                    LinearProgressIndicator(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 24.dp)
-                    )
                 }
 
                 Column(

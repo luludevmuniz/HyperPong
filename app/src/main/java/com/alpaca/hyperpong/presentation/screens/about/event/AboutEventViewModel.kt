@@ -1,4 +1,4 @@
-package com.alpaca.hyperpong.presentation.screens.detalhes_evento
+package com.alpaca.hyperpong.presentation.screens.about.event
 
 import androidx.lifecycle.ViewModel
 import com.alpaca.hyperpong.domain.model.Event

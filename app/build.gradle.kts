@@ -114,6 +114,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 
     // Lottie
-    val lottieVersion = "3.4.0"
-    implementation("com.airbnb.android:lottie:$lottieVersion")
+    val lottieVersion = "6.1.0"
+    implementation("com.airbnb.android:lottie-compose:$lottieVersion")
 }

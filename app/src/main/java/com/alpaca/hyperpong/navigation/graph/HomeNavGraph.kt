@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.alpaca.hyperpong.navigation.ARG_EVENT_ID
 import com.alpaca.hyperpong.navigation.HomeScreen
-import com.alpaca.hyperpong.presentation.screens.detalhes_evento.AboutEventScreen
+import com.alpaca.hyperpong.presentation.screens.about.event.AboutEventScreen
 import com.alpaca.hyperpong.presentation.screens.about.aulas.AboutAulasScreen
 import com.alpaca.hyperpong.presentation.screens.about.events.AboutEventsScreen
 import com.alpaca.hyperpong.presentation.screens.home.HomeContent
