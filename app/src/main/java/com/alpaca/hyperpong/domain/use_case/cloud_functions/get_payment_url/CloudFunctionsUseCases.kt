@@ -2,4 +2,4 @@ package com.alpaca.hyperpong.domain.use_case.cloud_functions.get_payment_url
 
 import com.alpaca.hyperpong.domain.use_case.cloud_functions.get_payment_url.get_payment_url.GetPaymentUrlUseCase
 
-class CloudFunctionsUseCase(val getPaymentUrlUseCase: GetPaymentUrlUseCase)
+class CloudFunctionsUseCases(val getPaymentUrlUseCase: GetPaymentUrlUseCase)

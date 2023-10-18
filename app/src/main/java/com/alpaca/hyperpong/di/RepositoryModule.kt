@@ -1,16 +1,13 @@
 package com.alpaca.hyperpong.di
 
 import androidx.paging.PagingConfig
-import com.alpaca.hyperpong.data.remote.CloudFunctionsApi
 import com.alpaca.hyperpong.data.repository.AuthRepositoryImpl
-import com.alpaca.hyperpong.data.repository.CloudFunctionsRepositoryImpl
 import com.alpaca.hyperpong.data.repository.EventosPagingSource
 import com.alpaca.hyperpong.data.repository.FirestoreRepositoryImpl
-import com.alpaca.hyperpong.data.repository.RealtimeRepositoryImpl
 import com.alpaca.hyperpong.domain.repository.AuthRepository
 import com.alpaca.hyperpong.domain.repository.CloudFunctionsRepository
 import com.alpaca.hyperpong.domain.repository.FirestoreRepository
-import com.alpaca.hyperpong.domain.repository.RealtimeRepository
+import com.alpaca.hyperpong.domain.use_case.UseCases
 import com.alpaca.hyperpong.domain.use_case.authentication.AuthUseCases
 import com.alpaca.hyperpong.domain.use_case.authentication.deletar_usuario.DeletarUsuarioUseCase
 import com.alpaca.hyperpong.domain.use_case.authentication.deslogar_usuario.DeslogarUsuarioUseCase
@@ -23,14 +20,13 @@ import com.alpaca.hyperpong.domain.use_case.authentication.logar_com_email_e_sen
 import com.alpaca.hyperpong.domain.use_case.authentication.logar_usuario_anonimo.LogarUsuarioAnonimoUseCase
 import com.alpaca.hyperpong.domain.use_case.authentication.recarregar_usuario.RecarregarUsuarioUseCase
 import com.alpaca.hyperpong.domain.use_case.authentication.registrar_usuario_com_email_e_senha.SignUpUseCase
-import com.alpaca.hyperpong.domain.use_case.cloud_functions.get_payment_url.CloudFunctionsUseCase
+import com.alpaca.hyperpong.domain.use_case.cloud_functions.get_payment_url.CloudFunctionsUseCases
 import com.alpaca.hyperpong.domain.use_case.cloud_functions.get_payment_url.get_payment_url.GetPaymentUrlUseCase
-import com.alpaca.hyperpong.domain.use_case.realtime.RealtimeUseCases
-import com.alpaca.hyperpong.domain.use_case.realtime.get_eventos.GetEventosUseCase
-import com.alpaca.hyperpong.util.Constantes.TAMANHO_PAGINA
+import com.alpaca.hyperpong.domain.use_case.firestore.FirestoreUseCases
+import com.alpaca.hyperpong.domain.use_case.firestore.get_event.GetEventUseCase
+import com.alpaca.hyperpong.domain.use_case.firestore.get_eventos.GetEventosUseCase
+import com.alpaca.hyperpong.util.Constantes.PAGE_SIZE
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import dagger.Module
@@ -53,41 +49,42 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideFirestoreRepository(): FirestoreRepository =
-        FirestoreRepositoryImpl(db = FirebaseFirestore.getInstance())
+    fun provideFirestoreRepository(
+        source: EventosPagingSource,
+        config: PagingConfig
+    ): FirestoreRepository =
+        FirestoreRepositoryImpl(
+            db = FirebaseFirestore.getInstance(),
+            source = source,
+            config = config
+        )
 
     @Singleton
     @Provides
-    fun provideRealtimeRef() = Firebase.database.reference
+    fun provideFirestoreRef() = FirebaseFirestore.getInstance()
 
     @Singleton
     @Provides
-    fun provideEventosPagingSource(database: DatabaseReference) =
-        EventosPagingSource(database = database)
+    fun provideEventosPagingSource(database: FirebaseFirestore) =
+        EventosPagingSource(db = database)
 
     @Singleton
     @Provides
-    fun providePagingConfig() = PagingConfig(pageSize = TAMANHO_PAGINA)
+    fun providePagingConfig() = PagingConfig(pageSize = PAGE_SIZE)
 
-    @Singleton
-    @Provides
-    fun provideProductsRepository(
-        source: EventosPagingSource, config: PagingConfig
-    ): RealtimeRepository = RealtimeRepositoryImpl(
-        source = source, config = config
-    )
 
     @Provides
     @Singleton
-    fun provideRealtimeUseCases(repository: RealtimeRepository): RealtimeUseCases =
-        RealtimeUseCases(
-            getEventosUseCase = GetEventosUseCase(repository = repository)
+    fun provideFirestoreUseCases(repository: FirestoreRepository): FirestoreUseCases =
+        FirestoreUseCases(
+            getEventosUseCase = GetEventosUseCase(repository = repository),
+            getEventUseCase = GetEventUseCase(repository = repository)
         )
 
     @Provides
     @Singleton
-    fun provideCloudFunctionsUseCases(repository: CloudFunctionsRepository): CloudFunctionsUseCase =
-        CloudFunctionsUseCase(getPaymentUrlUseCase = GetPaymentUrlUseCase(repository = repository))
+    fun provideCloudFunctionsUseCases(repository: CloudFunctionsRepository): CloudFunctionsUseCases =
+        CloudFunctionsUseCases(getPaymentUrlUseCase = GetPaymentUrlUseCase(repository = repository))
 
     @Provides
     @Singleton
@@ -103,6 +100,18 @@ object RepositoryModule {
         logarUsuarioAnonimoUseCase = LogarUsuarioAnonimoUseCase(repository = repository),
         recarregarUsuarioUseCase = RecarregarUsuarioUseCase(repository = repository),
         signUp = SignUpUseCase(repository = repository)
+    )
+
+    @Provides
+    @Singleton
+    fun provideUseCases(
+        authUseCases: AuthUseCases,
+        cloudFunctionsUseCases: CloudFunctionsUseCases,
+        firestoreUseCases: FirestoreUseCases
+    ): UseCases = UseCases(
+        authUseCases = authUseCases,
+        cloudFunctionsUseCases = cloudFunctionsUseCases,
+        firestoreUseCase = firestoreUseCases
     )
 
 //    @Singleton

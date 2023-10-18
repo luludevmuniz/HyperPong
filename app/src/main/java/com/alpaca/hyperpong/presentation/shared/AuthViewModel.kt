@@ -31,7 +31,7 @@ class AuthViewModel @Inject constructor(
     val isEmailVerificado get() = authUseCases.isEmailVerificadoUseCase()
 
     //TODO: O que fazer com esse getAuthState?
-    fun getAuthState() = authUseCases.getAuthStateUseCase(viewModelScope = viewModelScope)
+    private fun getAuthState() = authUseCases.getAuthStateUseCase(viewModelScope = viewModelScope)
 
     fun signUp(user: User) {
         _response.value = Response.Loading

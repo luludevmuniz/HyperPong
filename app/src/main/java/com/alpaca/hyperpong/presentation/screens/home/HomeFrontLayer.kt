@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
-import com.alpaca.hyperpong.domain.model.Evento
+import com.alpaca.hyperpong.domain.model.Event
 import com.alpaca.hyperpong.presentation.common.ErrorItem
 import com.alpaca.hyperpong.util.FiltroData
 import com.alpaca.hyperpong.util.FiltroData.Concluidos
@@ -30,8 +30,8 @@ fun HomeFrontLayer(
     modifier: Modifier = Modifier,
     categoria: HomeTab,
     loadState: CombinedLoadStates,
-    proximosEventos: List<Evento>,
-    eventosConcluidos: List<Evento>,
+    proximosEvents: List<Event>,
+    eventosConcluidos: List<Event>,
     dateFilters: List<FiltroData> = emptyList(),
     onRetryClicked: () -> Unit,
     onItemClicked: (String) -> Unit
@@ -43,7 +43,7 @@ fun HomeFrontLayer(
             .padding(horizontal = 24.dp)
     ) {
         LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
-            if (dateFilters.contains(Futuros) && proximosEventos.isNotEmpty()) {
+            if (dateFilters.contains(Futuros) && proximosEvents.isNotEmpty()) {
                 item {
                     Text(
                         modifier = Modifier.padding(
@@ -55,8 +55,8 @@ fun HomeFrontLayer(
                         fontSize = 16.sp
                     )
                 }
-                items(items = proximosEventos) { evento ->
-                    EventoItem(evento = evento, onItemClicked = { idEvento ->
+                items(items = proximosEvents) { evento ->
+                    EventoItem(event = evento, onItemClicked = { idEvento ->
                         onItemClicked(idEvento)
                     })
                 }
@@ -76,7 +76,7 @@ fun HomeFrontLayer(
                 }
 
                 items(items = eventosConcluidos) { evento ->
-                    EventoItem(evento = evento) { idEvento ->
+                    EventoItem(event = evento) { idEvento ->
                         onItemClicked(idEvento)
                     }
                 }

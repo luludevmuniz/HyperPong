@@ -2,37 +2,27 @@ package com.alpaca.hyperpong.data.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.alpaca.hyperpong.domain.model.Evento
-import com.alpaca.hyperpong.util.Constantes.TABELA_EVENTOS
-import com.alpaca.hyperpong.util.Constantes.TAMANHO_PAGINA
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseReference
+import com.alpaca.hyperpong.domain.model.Event
+import com.alpaca.hyperpong.util.Constantes.EVENTS_COLLECTION
+import com.google.firebase.firestore.DocumentSnapshot
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.withTimeout
 
-class EventosPagingSource(private val database: DatabaseReference) :
-    PagingSource<DataSnapshot, Evento>() {
-    override fun getRefreshKey(state: PagingState<DataSnapshot, Evento>): DataSnapshot? = null
+class EventosPagingSource(private val db: FirebaseFirestore) :
+    PagingSource<QuerySnapshot, Event>() {
+    override fun getRefreshKey(state: PagingState<QuerySnapshot, Event>): QuerySnapshot? = null
 
-    override suspend fun load(params: LoadParams<DataSnapshot>): LoadResult<DataSnapshot, Evento> =
+    override suspend fun load(params: LoadParams<QuerySnapshot>): LoadResult<QuerySnapshot, Event> =
         try {
-            val queryEventos =
-                database.child(TABELA_EVENTOS).orderByKey().limitToFirst(TAMANHO_PAGINA)
-            val currentPage = params.key ?: withTimeout(5000) {
-                queryEventos.get().await()
-            }
-            val lastVisibleEventKey = currentPage.children.lastOrNull()?.key
-            val nextPage = lastVisibleEventKey?.let {
-                withTimeout(5000) {
-                    queryEventos.startAfter(it).get().await()
-                }
-            }
-            val eventos = currentPage.children.map { snapshot ->
-                snapshot.toEvento()
-            }
+            //TODO: Reimplementar timout
+            val queryEventos = db.collection(EVENTS_COLLECTION)
+            val currentPage = params.key ?: queryEventos.get().await()
+            val lastVisibleProduct = currentPage.documents[currentPage.size().minus(1)]
+            val nextPage = queryEventos.startAfter(lastVisibleProduct).get().await()
             LoadResult.Page(
-                data = eventos,
+                data = currentPage.documents.toEventList(),
                 prevKey = null,
                 nextKey = nextPage
             )
@@ -43,4 +33,24 @@ class EventosPagingSource(private val database: DatabaseReference) :
         }
 }
 
-fun DataSnapshot.toEvento(): Evento = getValue(Evento::class.java) ?: Evento()
+fun List<DocumentSnapshot>.toEventList(): List<Event> =
+    map {
+        val categoriesAny = it.get("categories")
+        val categories = if (categoriesAny is List<*>) {
+            categoriesAny.filterIsInstance<HashMap<String, Any>>()
+        } else {
+            emptyList()
+        }
+
+        Event(
+            id = it.id,
+            description = it.getString("description").orEmpty(),
+            image = it.getString("image").orEmpty(),
+            status = it.getLong("status")?.toInt(),
+            title = it.getString("title").orEmpty(),
+            type = it.getLong("type") ?: 0,
+            start_date = it.getTimestamp("start_date"),
+            end_date = it.getTimestamp("end_date"),
+            categories = categories
+        )
+    }

@@ -42,14 +42,14 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.alpaca.hyperpong.R
-import com.alpaca.hyperpong.domain.model.Evento
+import com.alpaca.hyperpong.domain.model.Event
 import com.alpaca.hyperpong.ui.theme.HyperPongTheme
 
 @Composable
-fun EventoItem(evento: Evento?, onItemClicked: (String) -> Unit) {
-    evento?.let {
+fun EventoItem(event: Event?, onItemClicked: (String) -> Unit) {
+    event?.let {
         ListItem(
-            modifier = Modifier.clickable { onItemClicked(evento.id) },
+            modifier = Modifier.clickable { onItemClicked(event.id) },
             colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.onPrimary),
             leadingContent = {
                 AsyncImage(
@@ -58,37 +58,24 @@ fun EventoItem(evento: Evento?, onItemClicked: (String) -> Unit) {
                         maxWidth = 56.dp
                     ),
                     model = ImageRequest.Builder(LocalContext.current)
-                        .data(evento.imagem)
+                        .data(event.image)
                         .crossfade(true)
                         .build(),
                     contentScale = ContentScale.FillBounds,
-                    contentDescription = "Imagem do evento ${evento.nome}"
+                    contentDescription = "Imagem do evento ${event.title}"
                 )
             },
-            headlineContent = { Text(text = evento.nome) },
-            supportingContent = { Text(text = evento.dataInicioFormatada) },
+            headlineContent = { Text(text = event.title) },
+            supportingContent = { Text(text = event.dataInicioFormatada) },
             trailingContent = {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_bolt_sharp),
-                    tint = evento.statusEvento.getColor(),
+                    tint = event.statusEvento.getColor(),
                     contentDescription = "Ícone Inscrições Abertas"
                 )
             }
         )
         HorizontalDivider()
-    }
-}
-
-@Preview(name = "Light Mode", showBackground = true)
-@Preview(name = "Dark Mode", uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-fun EventoItemPreview() {
-    HyperPongTheme {
-        Surface {
-            EventoItem(
-                evento = Evento(id = "1", nome = "Touch my body", dataInicio = "2001-05-14"),
-                onItemClicked = {})
-        }
     }
 }
 

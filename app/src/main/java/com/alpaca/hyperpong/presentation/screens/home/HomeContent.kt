@@ -17,7 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.alpaca.hyperpong.domain.model.Evento
+import com.alpaca.hyperpong.domain.model.Event
 import com.alpaca.hyperpong.presentation.common.TopBarPadrao
 import com.alpaca.hyperpong.util.FiltroData
 import com.alpaca.hyperpong.util.TipoEvento
@@ -78,8 +78,8 @@ fun HomeContent(
         },
         frontLayerContent = {
             val eventos = homeViewModel.eventos.collectAsLazyPagingItems()
-            var proximosEventos by remember { mutableStateOf(emptyList<Evento>()) }
-            var eventosConcluidos by remember { mutableStateOf(emptyList<Evento>()) }
+            var proximosEvents by remember { mutableStateOf(emptyList<Event>()) }
+            var eventosConcluidos by remember { mutableStateOf(emptyList<Event>()) }
 
             LaunchedEffect(
                 eventos.itemCount,
@@ -95,7 +95,7 @@ fun HomeContent(
                     evento.dataInicioFormatada
                 }
 
-                proximosEventos = eventos.itemSnapshotList.filterList {
+                proximosEvents = eventos.itemSnapshotList.filterList {
                     this?.let {
                         selectedEventTypes
                             .ifEmpty { TipoEvento.entries.toList() }
@@ -111,7 +111,7 @@ fun HomeContent(
                     categoria = selectedTab,
                     loadState = eventos.loadState,
                     eventosConcluidos = eventosConcluidos,
-                    proximosEventos = proximosEventos,
+                    proximosEvents = proximosEvents,
                     dateFilters = dateFilters.ifEmpty { FiltroData.entries.toList() },
                     onRetryClicked = { eventos.retry() }
                 ) { idEvento ->
@@ -122,7 +122,7 @@ fun HomeContent(
                     categoria = selectedTab,
                     loadState = eventos.loadState,
                     eventosConcluidos = eventosConcluidos,
-                    proximosEventos = proximosEventos,
+                    proximosEvents = proximosEvents,
                     onRetryClicked = { eventos.retry() }
                 ) {
                     onAulaClicked()
