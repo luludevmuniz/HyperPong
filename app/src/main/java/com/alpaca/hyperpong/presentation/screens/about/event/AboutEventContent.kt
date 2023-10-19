@@ -53,169 +53,129 @@ import com.alpaca.hyperpong.presentation.common.TopBarPadrao
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutEventContent(
+    modifier: Modifier = Modifier,
     event: Event,
     showDialog: Boolean,
     isLoading: Boolean,
+    openBottomSheet: Boolean,
     tomorrowDay: String,
     onPaymentUrlRequest: (body: GetPaymentUrlRequestBody) -> Unit,
     paymentUrl: String,
     onDimissDialog: () -> Unit,
+    onDimissBottomSheet: () -> Unit,
     onNavigationIconClicked: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var openBottomSheet by rememberSaveable { mutableStateOf(false) }
-    val snackbarHostState = remember { SnackbarHostState() }
-    val uriHandler = LocalUriHandler.current
 
-    Scaffold(
-        topBar = {
-            TopBarPadrao(titulo = event.title) {
-                onNavigationIconClicked()
-            }
-        },
-        floatingActionButton = {
-            SignUpFab {
-                openBottomSheet = true
-            }
-        },
-        snackbarHost = {
-            SnackbarHost(snackbarHostState)
-        }
-    ) { innerPadding ->
-        Box(modifier = Modifier.padding(innerPadding)) {
-            Column(
+    Box(modifier = modifier) {
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+                .padding(bottom = 60.dp)
+        ) {
+            Surface(
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .padding(bottom = 60.dp)
+                    .background(
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        shape = RoundedCornerShape(
+                            bottomStart = 20.dp,
+                            bottomEnd = 20.dp
+                        )
+                    )
+                    .padding(
+                        start = 24.dp,
+                        end = 24.dp,
+                        bottom = 16.dp
+                    )
             ) {
-                Surface(
+                Column(
                     modifier = Modifier
-                        .background(
-                            color = MaterialTheme.colorScheme.primaryContainer,
-                            shape = RoundedCornerShape(
-                                bottomStart = 20.dp,
-                                bottomEnd = 20.dp
-                            )
-                        )
-                        .padding(
-                            start = 24.dp,
-                            end = 24.dp,
-                            bottom = 16.dp
-                        )
+                        .fillMaxWidth()
+                        .background(color = MaterialTheme.colorScheme.primaryContainer),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(color = MaterialTheme.colorScheme.primaryContainer),
-                        verticalArrangement = Arrangement.spacedBy(12.dp)
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                                ItemIconeTexto(
-                                    icone = painterResource(id = R.drawable.ic_money_value),
-                                    texto = "Valor: R$ 50,00"
-                                )
-                                ItemIconeTexto(
-                                    icone = painterResource(id = R.drawable.ic_event_day),
-                                    texto = "Data: ${event.dataInicioFormatada}"
-                                )
+                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            ItemIconeTexto(
+                                icone = painterResource(id = R.drawable.ic_money_value),
+                                texto = "Valor: R$ 50,00"
+                            )
+                            ItemIconeTexto(
+                                icone = painterResource(id = R.drawable.ic_event_day),
+                                texto = "Data: ${event.dataInicioFormatada}"
+                            )
 
-                            }
-                            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                                ItemIconeTexto(
-                                    icone = painterResource(id = R.drawable.ic_subscription_open),
-                                    texto = "Participantes: 9/16"
-                                )
-                                ItemIconeTexto(
-                                    icone = painterResource(id = R.drawable.ic_alarm),
-                                    texto = "Horário: TODO"
-                                )
-                            }
                         }
-                        LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                            items(event.categories) { categoria ->
-                                ElevatedSuggestionChip(enabled = false,
-                                    onClick = { /*TODO*/ },
-                                    colors = ChipColors(
-                                        containerColor = SuggestionChipDefaults.elevatedSuggestionChipColors().containerColor,
-                                        labelColor = SuggestionChipDefaults.elevatedSuggestionChipColors().labelColor,
-                                        leadingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().leadingIconContentColor,
-                                        trailingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().trailingIconContentColor,
-                                        disabledContainerColor = MaterialTheme.colorScheme.primary,
-                                        disabledLabelColor = MaterialTheme.colorScheme.onPrimary,
-                                        disabledLeadingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().disabledContainerColor,
-                                        disabledTrailingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().disabledTrailingIconContentColor
-                                    ),
-                                    label = { Text(text = categoria["name"].toString()) })
-                            }
+                        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            ItemIconeTexto(
+                                icone = painterResource(id = R.drawable.ic_subscription_open),
+                                texto = "Participantes: 9/16"
+                            )
+                            ItemIconeTexto(
+                                icone = painterResource(id = R.drawable.ic_alarm),
+                                texto = "Horário: TODO"
+                            )
+                        }
+                    }
+                    LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        items(event.categories) { categoria ->
+                            ElevatedSuggestionChip(enabled = false,
+                                onClick = { /*TODO*/ },
+                                colors = ChipColors(
+                                    containerColor = SuggestionChipDefaults.elevatedSuggestionChipColors().containerColor,
+                                    labelColor = SuggestionChipDefaults.elevatedSuggestionChipColors().labelColor,
+                                    leadingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().leadingIconContentColor,
+                                    trailingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().trailingIconContentColor,
+                                    disabledContainerColor = MaterialTheme.colorScheme.primary,
+                                    disabledLabelColor = MaterialTheme.colorScheme.onPrimary,
+                                    disabledLeadingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().disabledContainerColor,
+                                    disabledTrailingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().disabledTrailingIconContentColor
+                                ),
+                                label = { Text(text = categoria["name"].toString()) })
                         }
                     }
                 }
-
-                Column(
-                    modifier = Modifier.padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(24.dp)
-                ) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(LocalContext.current).data(event.image)
-                            .crossfade(true).build(),
-                        contentScale = ContentScale.Crop,
-                        contentDescription = "Imagem do evento ${event.title}"
-                    )
-                    Text(
-                        text = event.title,
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = event.description.replace("\\n", " \n "),
-                        style = MaterialTheme.typography.bodyMedium
-                    )
-                }
             }
-        }
 
-        if (openBottomSheet) {
-            EventSignUpModal(sheetState = sheetState, onSignInClicked = {
-                val body = GetPaymentUrlRequestBody(
-                    value = 1500,
-                    payday = tomorrowDay,
-                    mainPaymentMethodId = "pix",
-                    Customer = Customer(myId = "pay-652937390fb2a5.16130871")
+            Column(
+                modifier = Modifier.padding(24.dp),
+                verticalArrangement = Arrangement.spacedBy(24.dp)
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current).data(event.image)
+                        .crossfade(true).build(),
+                    contentScale = ContentScale.Crop,
+                    contentDescription = "Imagem do evento ${event.title}"
                 )
-                onPaymentUrlRequest(body)
-                openBottomSheet = false
-            }) {
-                openBottomSheet = false
+                Text(
+                    text = event.title,
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                )
+                Text(
+                    text = event.description.replace("\\n", " \n "),
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
     }
 
-    if (showDialog) {
-        AlertDialog(
-            title = {
-                Text(text = "Prosseguir em seu navegador")
-            },
-            text = {
-                Text(text = "Ao clicar em prosseguir, você será redirecionado para seu navegador padrão, onde poderá finalizar o pagamento.")
-            },
-            dismissButton = {
-                Button(onClick = { onDimissDialog() }) {
-                    Text(text = "Cancelar")
-                }
-            },
-            onDismissRequest = { onDimissDialog() },
-            confirmButton = {
-                Button(onClick = {
-                    uriHandler.openUri(paymentUrl)
-                }) {
-                    Text(text = "Prosseguir")
-                }
-            }
-        )
+    if (openBottomSheet) {
+        EventSignUpModal(sheetState = sheetState, onSignInClicked = {
+            val body = GetPaymentUrlRequestBody(
+                value = 1500,
+                payday = tomorrowDay,
+                mainPaymentMethodId = "pix",
+                Customer = Customer(myId = "pay-652937390fb2a5.16130871")
+            )
+            onPaymentUrlRequest(body)
+            onDimissBottomSheet()
+        }) {
+            onDimissBottomSheet()
+        }
     }
 }
 

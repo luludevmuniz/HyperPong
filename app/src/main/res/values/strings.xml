@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">Hyper Pong</string>
-    <string name="lorem_ipsum">"Lorem ipsum dolor sit amet consectetur. At consectetur netus dignissim vitae morbi. Non dictumst justo non enim interdum sit. Diam mauris velit viverra sed viverra ut purus. Nulla sit id amet dolor auctor."</string>
-    <string name="termos_de_uso">
+    <string name="app_name" translatable="false">Hyper Pong</string>
+    <string name="lorem_ipsum" translatable="false">"Lorem ipsum dolor sit amet consectetur. At consectetur netus dignissim vitae morbi. Non dictumst justo non enim interdum sit. Diam mauris velit viverra sed viverra ut purus. Nulla sit id amet dolor auctor."</string>
+    <string name="termos_de_uso" translatable="false">
     <b>Bem-vindo ao %1$s! </b>
         \n
     \nAo utilizar este aplicativo, você concorda com os seguintes termos e condições:
@@ -39,4 +39,8 @@
     \n9. <b> Contato </b>
        \n \u0020\u0020\u0020 - Se você tiver alguma dúvida ou preocupação, entre em contato conosco em %4$s.
 </string>
+    <string name="title_payment_dialog" translatable="false">Prosseguir em seu navegador</string>
+    <string name="message_payment_dialog" translatable="false">Ao clicar em prosseguir, você será redirecionado para seu navegador padrão, onde poderá finalizar o pagamento</string>
+    <string name="dismiss_button_text_payment_dialog" translatable="false">Cancelar</string>
+    <string name="confirm_button_text_payment_dialog" translatable="false">Prosseguir</string>
 </resources>

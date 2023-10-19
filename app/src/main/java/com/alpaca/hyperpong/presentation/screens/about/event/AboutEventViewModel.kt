@@ -26,7 +26,7 @@ import javax.inject.Inject
 class AboutEventViewModel @Inject constructor(
     private val useCases: UseCases
 ) : ViewModel() {
-    private val _event: MutableStateFlow<Response<Event?>> =
+    private val _event: MutableStateFlow<Response<Event>> =
         MutableStateFlow(Idle)
     val event = _event.asStateFlow()
     private val _paymentUrl: MutableStateFlow<Response<String>> =
