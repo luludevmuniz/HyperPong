@@ -2,7 +2,8 @@ package com.alpaca.hyperpong.data.repository
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.alpaca.hyperpong.domain.model.Event
+import com.alpaca.hyperpong.domain.model.firestore.Category
+import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.util.Constantes.EVENTS_COLLECTION
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FirebaseFirestore
@@ -33,15 +34,9 @@ class EventosPagingSource(private val db: FirebaseFirestore) :
         }
 }
 
+@Suppress("UNCHECKED_CAST")
 fun List<DocumentSnapshot>.toEventList(): List<Event> =
     map {
-        val categoriesAny = it.get("categories")
-        val categories = if (categoriesAny is List<*>) {
-            categoriesAny.filterIsInstance<HashMap<String, Any>>()
-        } else {
-            emptyList()
-        }
-
         Event(
             id = it.id,
             description = it.getString("description").orEmpty(),
@@ -51,6 +46,6 @@ fun List<DocumentSnapshot>.toEventList(): List<Event> =
             type = it.getLong("type") ?: 0,
             start_date = it.getTimestamp("start_date"),
             end_date = it.getTimestamp("end_date"),
-            categories = categories
+            categories = it.get("categories") as? List<Category> ?: emptyList()
         )
     }

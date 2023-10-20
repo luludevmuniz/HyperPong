@@ -1,4 +1,4 @@
-package com.alpaca.hyperpong.domain.model
+package com.alpaca.hyperpong.domain.model.firestore
 
 import com.alpaca.hyperpong.util.StatusEvento
 import com.alpaca.hyperpong.util.TipoEvento
@@ -7,12 +7,11 @@ import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.Date
-import java.util.HashMap
 import java.util.Locale
 
 data class Event(
     var id: String = "",
-    var categories: List<HashMap<String, Any>> = emptyList(),
+    var categories: List<Category> = emptyList(),
     var description: String = "",
     var end_date: Timestamp? = null,
     var image: String = "",

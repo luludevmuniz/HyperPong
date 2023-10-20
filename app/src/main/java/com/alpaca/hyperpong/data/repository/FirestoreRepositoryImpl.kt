@@ -2,7 +2,7 @@ package com.alpaca.hyperpong.data.repository
 
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
-import com.alpaca.hyperpong.domain.model.Event
+import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.domain.model.firestore.User
 import com.alpaca.hyperpong.domain.repository.FirestoreRepository
 import com.alpaca.hyperpong.domain.repository.GetEventResponse

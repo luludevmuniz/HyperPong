@@ -1,7 +1,7 @@
 package com.alpaca.hyperpong.presentation.screens.about.event
 
 import androidx.lifecycle.ViewModel
-import com.alpaca.hyperpong.domain.model.Event
+import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.domain.model.cloud_functions.request_body.GetPaymentUrlRequestBody
 import com.alpaca.hyperpong.domain.use_case.UseCases
 import com.alpaca.hyperpong.util.Response

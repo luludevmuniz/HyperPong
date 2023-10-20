@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -40,9 +41,11 @@ fun DropdownFilterButton(
     onItemSelected: (String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val trailingIconRotation by animateFloatAsState(targetValue = if (expanded) 90f else 0f,
+    val trailingIconRotation by animateFloatAsState(
+        targetValue = if (expanded) 90f else 0f,
         label = "Trailing Icon Rotation Anim"
     )
+    var menuItemSelected by rememberSaveable { mutableStateOf(emptyList<String>()) }
 
     ExposedDropdownMenuBox(
         expanded = expanded,
@@ -84,9 +87,9 @@ fun DropdownFilterButton(
                 onDismissRequest = { expanded = false }
             ) {
                 items.forEach { item ->
-                    var menuItemSelected by remember { mutableStateOf(false) }
-                    val menuItemTrailingIcon = if (menuItemSelected) Icons.Default.Check
-                    else Icons.Default.Add
+                    val menuItemTrailingIcon =
+                        if (menuItemSelected.contains(item)) Icons.Default.Check
+                        else Icons.Default.Add
 
                     DropdownMenuItem(
                         text = { Text(text = item) },
@@ -98,7 +101,11 @@ fun DropdownFilterButton(
                             )
                         },
                         onClick = {
-                            menuItemSelected = !menuItemSelected
+                            menuItemSelected = if (menuItemSelected.contains(item)) {
+                                menuItemSelected.filterNot { it == item }
+                            } else {
+                                menuItemSelected.plus(item)
+                            }
                             onItemSelected(item)
                         }
                     )

@@ -42,7 +42,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.alpaca.hyperpong.R
-import com.alpaca.hyperpong.domain.model.Event
+import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.ui.theme.HyperPongTheme
 
 @Composable

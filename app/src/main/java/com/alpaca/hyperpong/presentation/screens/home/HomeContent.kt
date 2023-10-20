@@ -17,7 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.alpaca.hyperpong.domain.model.Event
+import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.presentation.common.TopBarPadrao
 import com.alpaca.hyperpong.util.FiltroData
 import com.alpaca.hyperpong.util.TipoEvento

@@ -1,6 +1,6 @@
-package com.alpaca.hyperpong.domain.model
+package com.alpaca.hyperpong.domain.model.firestore
 
-data class Participante(
+data class Participant(
     var birth_date: String = "",
     var id: String = "",
     var name: String = "",

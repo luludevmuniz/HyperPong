@@ -12,18 +12,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ChipColors
 import androidx.compose.material3.ElevatedSuggestionChip
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -32,23 +26,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.alpaca.hyperpong.R
-import com.alpaca.hyperpong.domain.model.Event
+import com.alpaca.hyperpong.domain.model.firestore.Category
+import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.domain.model.cloud_functions.Customer
 import com.alpaca.hyperpong.domain.model.cloud_functions.request_body.GetPaymentUrlRequestBody
+import com.alpaca.hyperpong.presentation.common.FilterChipRow
 import com.alpaca.hyperpong.presentation.common.ItemIconeTexto
-import com.alpaca.hyperpong.presentation.common.TopBarPadrao
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,7 +49,6 @@ fun AboutEventContent(
     modifier: Modifier = Modifier,
     event: Event,
     showDialog: Boolean,
-    isLoading: Boolean,
     openBottomSheet: Boolean,
     tomorrowDay: String,
     onPaymentUrlRequest: (body: GetPaymentUrlRequestBody) -> Unit,
@@ -66,6 +58,7 @@ fun AboutEventContent(
     onNavigationIconClicked: () -> Unit
 ) {
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    var selectedCategory by remember { mutableStateOf(event.categories.first()) }
 
     Box(modifier = modifier) {
         Column(
@@ -101,7 +94,7 @@ fun AboutEventContent(
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             ItemIconeTexto(
                                 icone = painterResource(id = R.drawable.ic_money_value),
-                                texto = "Valor: R$ 50,00"
+                                texto = "Valor: ${selectedCategory.price} reais"
                             )
                             ItemIconeTexto(
                                 icone = painterResource(id = R.drawable.ic_event_day),
@@ -112,7 +105,7 @@ fun AboutEventContent(
                         Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                             ItemIconeTexto(
                                 icone = painterResource(id = R.drawable.ic_subscription_open),
-                                texto = "Participantes: 9/16"
+                                texto = "Participantes: ${selectedCategory.participants.size} / ${selectedCategory.max_participants}"
                             )
                             ItemIconeTexto(
                                 icone = painterResource(id = R.drawable.ic_alarm),
@@ -121,12 +114,18 @@ fun AboutEventContent(
                         }
                     }
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        items(event.categories) { categoria ->
-                            ElevatedSuggestionChip(enabled = false,
-                                onClick = { /*TODO*/ },
+                        items(event.categories) { category ->
+                            ElevatedSuggestionChip(
+                                onClick = { selectedCategory = category },
                                 colors = ChipColors(
-                                    containerColor = SuggestionChipDefaults.elevatedSuggestionChipColors().containerColor,
-                                    labelColor = SuggestionChipDefaults.elevatedSuggestionChipColors().labelColor,
+                                    containerColor = if (category == selectedCategory)
+                                        MaterialTheme.colorScheme.tertiaryContainer
+                                    else
+                                        SuggestionChipDefaults.elevatedSuggestionChipColors().containerColor,
+                                    labelColor = if (category == selectedCategory)
+                                        MaterialTheme.colorScheme.onTertiaryContainer
+                                    else
+                                        SuggestionChipDefaults.elevatedSuggestionChipColors().labelColor,
                                     leadingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().leadingIconContentColor,
                                     trailingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().trailingIconContentColor,
                                     disabledContainerColor = MaterialTheme.colorScheme.primary,
@@ -134,7 +133,7 @@ fun AboutEventContent(
                                     disabledLeadingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().disabledContainerColor,
                                     disabledTrailingIconContentColor = SuggestionChipDefaults.elevatedSuggestionChipColors().disabledTrailingIconContentColor
                                 ),
-                                label = { Text(text = categoria["name"].toString()) })
+                                label = { Text(text = category.name) })
                         }
                     }
                 }

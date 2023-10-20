@@ -1,7 +1,7 @@
 package com.alpaca.hyperpong.domain.repository
 
 import androidx.paging.PagingData
-import com.alpaca.hyperpong.domain.model.Event
+import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.domain.model.firestore.User
 import com.alpaca.hyperpong.util.Response
 import kotlinx.coroutines.flow.Flow
