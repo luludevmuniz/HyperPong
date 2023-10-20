@@ -1,5 +1,6 @@
-package com.alpaca.hyperpong.presentation.screens.home
+package com.alpaca.hyperpong.presentation.screens.home.back_layer
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.alpaca.hyperpong.R
 import com.alpaca.hyperpong.presentation.common.DropdownFilterButton
 import com.alpaca.hyperpong.presentation.common.FilterChipRow
+import com.alpaca.hyperpong.presentation.screens.home.HomeTab
 import com.alpaca.hyperpong.util.Constantes.categoriasEventos
 import com.alpaca.hyperpong.util.FiltroData
 import com.alpaca.hyperpong.util.TipoEvento
@@ -70,7 +72,9 @@ fun HomeBackLayer(
         HomeBackLayerContent(
             selectedTab = selectedTab,
             onDateButtonClicked = { showDatePicker = true },
-            onEventTypeSelected = { eventType -> onEventTypeSelected(eventType) },
+            onEventTypeSelected = { eventType ->
+                onEventTypeSelected(eventType)
+            },
             onDateChipClicked = { filtro -> onDateChipClicked(filtro) }
         )
     }
@@ -116,7 +120,9 @@ private fun HomeBackLayerContent(
             modalidades = modalidades,
             categorias = categorias,
             onDateButtonClicked = { onDateButtonClicked() },
-            onEventTypeSelected = { eventType -> onEventTypeSelected(eventType) }
+            onEventTypeSelected = { eventType ->
+                onEventTypeSelected(eventType)
+            }
         )
         FilterChipRow(
             items = FiltroData.entries.map { it.name },
@@ -140,7 +146,9 @@ private fun HomeFilterButtons(
             title = "Escolher Modalidades",
             leadingIcon = painterResource(id = R.drawable.ic_joystick),
             items = modalidades,
-            onItemSelected = { eventType -> onEventTypeSelected(TipoEvento.toEnum(eventType = eventType)) }
+            onItemSelected = { eventType ->
+                onEventTypeSelected(TipoEvento.toEnum(eventType = eventType))
+            }
         )
         categorias?.let {
             DropdownFilterButton(

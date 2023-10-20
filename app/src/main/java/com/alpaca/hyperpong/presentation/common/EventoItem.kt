@@ -1,4 +1,4 @@
-package com.alpaca.hyperpong.presentation.screens.home
+package com.alpaca.hyperpong.presentation.common
 
 import android.content.res.Configuration
 import androidx.compose.animation.core.FastOutLinearInEasing

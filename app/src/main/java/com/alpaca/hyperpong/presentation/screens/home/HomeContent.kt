@@ -1,11 +1,11 @@
 package com.alpaca.hyperpong.presentation.screens.home
 
 //noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.BackdropScaffold
 //noinspection UsingMaterialAndMaterial3Libraries
+//noinspection UsingMaterialAndMaterial3Libraries
+import androidx.compose.material.BackdropScaffold
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -19,8 +19,12 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.presentation.common.TopBarPadrao
+import com.alpaca.hyperpong.presentation.screens.home.back_layer.HomeBackLayer
+import com.alpaca.hyperpong.presentation.screens.home.front_layer.HomeFrontLayer
 import com.alpaca.hyperpong.util.FiltroData
 import com.alpaca.hyperpong.util.TipoEvento
+import com.alpaca.hyperpong.util.isError
+import com.alpaca.hyperpong.util.isLoading
 import okhttp3.internal.filterList
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -109,9 +113,10 @@ fun HomeContent(
             when (selectedTab) {
                 HomeTab.Eventos -> HomeFrontLayer(
                     categoria = selectedTab,
-                    loadState = eventos.loadState,
-                    eventosConcluidos = eventosConcluidos,
-                    proximosEvents = proximosEvents,
+                    isLoading = eventos.loadState.isLoading,
+                    isError = eventos.loadState.isError,
+                    completedEvents = eventosConcluidos,
+                    nextEvents = proximosEvents,
                     dateFilters = dateFilters.ifEmpty { FiltroData.entries.toList() },
                     onRetryClicked = { eventos.retry() }
                 ) { idEvento ->
@@ -120,9 +125,10 @@ fun HomeContent(
 
                 HomeTab.Aulas -> HomeFrontLayer(
                     categoria = selectedTab,
-                    loadState = eventos.loadState,
-                    eventosConcluidos = eventosConcluidos,
-                    proximosEvents = proximosEvents,
+                    isLoading = eventos.loadState.isLoading,
+                    isError = eventos.loadState.isError,
+                    completedEvents = eventosConcluidos,
+                    nextEvents = proximosEvents,
                     onRetryClicked = { eventos.retry() }
                 ) {
                     onAulaClicked()
