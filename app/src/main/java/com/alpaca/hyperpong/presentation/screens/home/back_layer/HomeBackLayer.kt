@@ -1,6 +1,5 @@
 package com.alpaca.hyperpong.presentation.screens.home.back_layer
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

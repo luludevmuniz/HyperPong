@@ -1,6 +1,5 @@
 package com.alpaca.hyperpong.presentation.common
 
-import android.util.Log
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer

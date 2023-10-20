@@ -1,8 +1,11 @@
 package com.alpaca.hyperpong.presentation.screens.about.event
 
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -26,6 +29,7 @@ import com.alpaca.hyperpong.presentation.common.TopBarPadrao
 import com.alpaca.hyperpong.util.Response.Loading
 import com.alpaca.hyperpong.util.Response.Success
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutEventScreen(
     viewModel: AboutEventViewModel = hiltViewModel(),
@@ -79,7 +83,6 @@ fun AboutEventScreen(
                 AboutEventContent(
                     modifier = Modifier.padding(innerPadding),
                     event = it,
-                    showDialog = showDialog,
                     openBottomSheet = openBottomSheet,
                     tomorrowDay = viewModel.getTomorrowDay(),
                     onPaymentUrlRequest = { body ->
@@ -89,10 +92,7 @@ fun AboutEventScreen(
                             showDialog = true
                         }
                     },
-                    paymentUrl = paymentUrl,
-                    onDimissDialog = { showDialog = false },
                     onDimissBottomSheet = { openBottomSheet = false },
-                    onNavigationIconClicked = { onNavigationIconClicked() }
                 )
             }
 

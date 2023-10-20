@@ -32,7 +32,6 @@ import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.presentation.common.ErrorItem
 import com.alpaca.hyperpong.presentation.common.EventoItem
 import com.alpaca.hyperpong.presentation.common.ShimmerEffect
-import com.alpaca.hyperpong.presentation.screens.home.HomeTab
 import com.alpaca.hyperpong.util.FiltroData
 import com.alpaca.hyperpong.util.FiltroData.Concluidos
 import com.alpaca.hyperpong.util.FiltroData.Futuros
@@ -41,7 +40,6 @@ import kotlinx.coroutines.delay
 @Composable
 fun HomeFrontLayer(
     modifier: Modifier = Modifier,
-    categoria: HomeTab,
     isLoading: Boolean,
     isError: Boolean,
     nextEvents: List<Event>,
@@ -75,7 +73,7 @@ fun HomeFrontLayer(
         modifier = modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.primaryContainer)
-            .padding(horizontal = 24.dp)
+            .padding(all = 24.dp)
     ) {
         AnimatedVisibility(
             visibleState = emptyScreenAnimVisibleState,
@@ -84,7 +82,6 @@ fun HomeFrontLayer(
 
         ) {
             Text(
-                modifier = Modifier.padding(top = 24.dp),
                 text = "Não encontramos nenhum evento para o filtro selecionado.",
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
@@ -98,10 +95,7 @@ fun HomeFrontLayer(
             LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
                 item {
                     Text(
-                        modifier = Modifier.padding(
-                            top = 24.dp,
-                            bottom = 16.dp
-                        ),
+                        modifier = Modifier.padding(bottom = 16.dp),
                         text = "Próximos Eventos",
                         color = MaterialTheme.colorScheme.onPrimaryContainer,
                         fontSize = 16.sp
@@ -128,10 +122,7 @@ fun HomeFrontLayer(
                 LazyColumn(contentPadding = PaddingValues(bottom = 24.dp)) {
                     item {
                         Text(
-                            modifier = Modifier.padding(
-                                top = 24.dp,
-                                bottom = 16.dp
-                            ),
+                            modifier = Modifier.padding(bottom = 16.dp),
                             text = "Eventos Concluídos",
                             color = MaterialTheme.colorScheme.onPrimaryContainer,
                             fontSize = 16.sp

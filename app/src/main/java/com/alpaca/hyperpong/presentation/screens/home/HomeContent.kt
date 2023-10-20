@@ -1,11 +1,11 @@
 package com.alpaca.hyperpong.presentation.screens.home
 
 //noinspection UsingMaterialAndMaterial3Libraries
-//noinspection UsingMaterialAndMaterial3Libraries
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BackdropScaffold
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.BackdropValue
 import androidx.compose.material.ExperimentalMaterialApi
+//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.rememberBackdropScaffoldState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -112,7 +112,6 @@ fun HomeContent(
 
             when (selectedTab) {
                 HomeTab.Eventos -> HomeFrontLayer(
-                    categoria = selectedTab,
                     isLoading = eventos.loadState.isLoading,
                     isError = eventos.loadState.isError,
                     completedEvents = eventosConcluidos,
@@ -124,7 +123,6 @@ fun HomeContent(
                 }
 
                 HomeTab.Aulas -> HomeFrontLayer(
-                    categoria = selectedTab,
                     isLoading = eventos.loadState.isLoading,
                     isError = eventos.loadState.isError,
                     completedEvents = eventosConcluidos,

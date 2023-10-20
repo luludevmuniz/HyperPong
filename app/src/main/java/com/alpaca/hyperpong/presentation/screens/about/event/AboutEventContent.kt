@@ -36,28 +36,20 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.alpaca.hyperpong.R
-import com.alpaca.hyperpong.domain.model.firestore.Category
-import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.domain.model.cloud_functions.Customer
 import com.alpaca.hyperpong.domain.model.cloud_functions.request_body.GetPaymentUrlRequestBody
-import com.alpaca.hyperpong.presentation.common.FilterChipRow
+import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.presentation.common.ItemIconeTexto
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AboutEventContent(
     modifier: Modifier = Modifier,
     event: Event,
-    showDialog: Boolean,
     openBottomSheet: Boolean,
     tomorrowDay: String,
     onPaymentUrlRequest: (body: GetPaymentUrlRequestBody) -> Unit,
-    paymentUrl: String,
-    onDimissDialog: () -> Unit,
     onDimissBottomSheet: () -> Unit,
-    onNavigationIconClicked: () -> Unit
 ) {
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var selectedCategory by remember { mutableStateOf(event.categories.first()) }
 
     Box(modifier = modifier) {
@@ -160,22 +152,24 @@ fun AboutEventContent(
                 )
             }
         }
-    }
-
-    if (openBottomSheet) {
-        EventSignUpModal(sheetState = sheetState, onSignInClicked = {
-            val body = GetPaymentUrlRequestBody(
-                value = 1500,
-                payday = tomorrowDay,
-                mainPaymentMethodId = "pix",
-                Customer = Customer(myId = "pay-652937390fb2a5.16130871")
-            )
-            onPaymentUrlRequest(body)
-            onDimissBottomSheet()
-        }) {
-            onDimissBottomSheet()
+        if (openBottomSheet) {
+            EventSignUpModal(
+                onSignInClicked = {
+                    val body = GetPaymentUrlRequestBody(
+                        value = selectedCategory.price.toLong(),
+                        payday = tomorrowDay,
+                        mainPaymentMethodId = "pix",
+                        Customer = Customer(myId = "pay-652937390fb2a5.16130871")
+                    )
+                    onPaymentUrlRequest(body)
+                    onDimissBottomSheet()
+                }
+            ) {
+                onDimissBottomSheet()
+            }
         }
     }
+
 }
 
 @Composable

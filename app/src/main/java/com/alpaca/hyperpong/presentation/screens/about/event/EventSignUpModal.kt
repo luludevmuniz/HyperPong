@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -13,8 +14,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -33,19 +34,22 @@ import com.alpaca.hyperpong.presentation.common.FullScreenDialog
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EventSignUpModal(
-    sheetState: SheetState,
     categorias: List<String> = emptyList(),
     onSignInClicked: () -> Unit,
     onDismissRequest: () -> Unit
 ) {
+    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var showDialog by remember { mutableStateOf(false) }
-    ModalBottomSheet(sheetState = sheetState, onDismissRequest = { onDismissRequest() }) {
+
+    ModalBottomSheet(
+        sheetState = sheetState,
+        onDismissRequest = { onDismissRequest() }
+    ) {
         Column(
-            modifier = Modifier.padding(
-                start = 24.dp,
-                end = 24.dp,
-                bottom = 24.dp
-            ), verticalArrangement = Arrangement.spacedBy(12.dp)
+            modifier = Modifier
+                .padding(horizontal = 24.dp)
+                .navigationBarsPadding(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             val annotatedString = buildAnnotatedString {
                 withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onSurface)) {
@@ -68,6 +72,7 @@ fun EventSignUpModal(
                     }
                 }
             }
+
             ClickableText(
                 text = annotatedString,
                 onClick = { offset ->
@@ -80,6 +85,7 @@ fun EventSignUpModal(
                     }
                 }
             )
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
@@ -95,6 +101,7 @@ fun EventSignUpModal(
                     style = MaterialTheme.typography.bodySmall
                 )
             }
+
             FilledTonalButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = { onSignInClicked() },
