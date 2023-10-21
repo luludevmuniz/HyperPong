@@ -14,7 +14,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.alpaca.hyperpong.presentation.shared.RegisterContent
 import com.alpaca.hyperpong.presentation.shared.AuthViewModel
 import com.alpaca.hyperpong.util.Response
 

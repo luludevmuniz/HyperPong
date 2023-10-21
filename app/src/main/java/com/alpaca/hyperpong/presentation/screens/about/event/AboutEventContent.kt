@@ -1,5 +1,6 @@
 package com.alpaca.hyperpong.presentation.screens.about.event
 
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,19 +15,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ChipColors
 import androidx.compose.material3.ElevatedSuggestionChip
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExtendedFloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SuggestionChipDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +32,7 @@ import coil.request.ImageRequest
 import com.alpaca.hyperpong.R
 import com.alpaca.hyperpong.domain.model.cloud_functions.Customer
 import com.alpaca.hyperpong.domain.model.cloud_functions.request_body.GetPaymentUrlRequestBody
+import com.alpaca.hyperpong.domain.model.firestore.Category
 import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.presentation.common.ItemIconeTexto
 
@@ -47,11 +42,11 @@ fun AboutEventContent(
     event: Event,
     openBottomSheet: Boolean,
     tomorrowDay: String,
+    selectedCategory: Category,
     onPaymentUrlRequest: (body: GetPaymentUrlRequestBody) -> Unit,
     onDimissBottomSheet: () -> Unit,
+    onCategoryClicked: (category: Category) -> Unit
 ) {
-    var selectedCategory by remember { mutableStateOf(event.categories.first()) }
-
     Box(modifier = modifier) {
         Column(
             modifier = Modifier
@@ -90,7 +85,7 @@ fun AboutEventContent(
                             )
                             ItemIconeTexto(
                                 icone = painterResource(id = R.drawable.ic_event_day),
-                                texto = "Data: ${event.dataInicioFormatada}"
+                                texto = "Data: ${selectedCategory.startDate}"
                             )
 
                         }
@@ -101,14 +96,14 @@ fun AboutEventContent(
                             )
                             ItemIconeTexto(
                                 icone = painterResource(id = R.drawable.ic_alarm),
-                                texto = "Horário: TODO"
+                                texto = "Horário: ${selectedCategory.startHour}"
                             )
                         }
                     }
                     LazyRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         items(event.categories) { category ->
                             ElevatedSuggestionChip(
-                                onClick = { selectedCategory = category },
+                                onClick = { onCategoryClicked(category) },
                                 colors = ChipColors(
                                     containerColor = if (category == selectedCategory)
                                         MaterialTheme.colorScheme.tertiaryContainer
@@ -152,6 +147,7 @@ fun AboutEventContent(
                 )
             }
         }
+
         if (openBottomSheet) {
             EventSignUpModal(
                 onSignInClicked = {
@@ -169,21 +165,4 @@ fun AboutEventContent(
             }
         }
     }
-
-}
-
-@Composable
-fun SignUpFab(onSignUpClick: () -> Unit) {
-    ExtendedFloatingActionButton(
-        text = {
-            Text(text = "Inscrever")
-        },
-        icon = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_edit_square),
-                contentDescription = "Se inscrever no evento"
-            )
-        },
-        onClick = { onSignUpClick() }
-    )
 }

@@ -14,7 +14,7 @@ import com.alpaca.hyperpong.presentation.common.SessaoAula
 import com.alpaca.hyperpong.ui.theme.HyperPongTheme
 
 @Composable
-fun AboutAulasContent(modifier: Modifier = Modifier) {
+fun AboutLessonsContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier
             .verticalScroll(state = rememberScrollState())
@@ -51,6 +51,6 @@ fun AboutAulasContent(modifier: Modifier = Modifier) {
 @Composable
 fun AboutAulasContentPrev() {
     HyperPongTheme {
-        AboutAulasContent()
+        AboutLessonsContent()
     }
 }

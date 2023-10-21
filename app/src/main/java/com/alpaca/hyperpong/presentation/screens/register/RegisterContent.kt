@@ -1,4 +1,4 @@
-package com.alpaca.hyperpong.presentation.shared
+package com.alpaca.hyperpong.presentation.screens.register
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement

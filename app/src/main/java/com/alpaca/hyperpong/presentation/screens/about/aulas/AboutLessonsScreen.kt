@@ -7,7 +7,7 @@ import androidx.compose.ui.Modifier
 import com.alpaca.hyperpong.presentation.common.TopBarPadrao
 
 @Composable
-fun AboutAulasScreen(onNavigationIconClicked: () -> Unit) {
+fun AboutLessonsScreen(onNavigationIconClicked: () -> Unit) {
     Scaffold(
         topBar = {
             TopBarPadrao("Sobre as aulas") {
@@ -15,6 +15,6 @@ fun AboutAulasScreen(onNavigationIconClicked: () -> Unit) {
             }
         }
     ) { innerPadding ->
-        AboutAulasContent(modifier = Modifier.padding(innerPadding))
+        AboutLessonsContent(modifier = Modifier.padding(innerPadding))
     }
 }

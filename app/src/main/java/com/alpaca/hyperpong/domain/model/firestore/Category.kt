@@ -1,6 +1,8 @@
 package com.alpaca.hyperpong.domain.model.firestore
 
 import com.google.firebase.Timestamp
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 data class Category(
     var date: Timestamp? = null,
@@ -8,5 +10,17 @@ data class Category(
     var name: String = "",
     var max_participants: Int = 0,
     var price: String = "",
-    var participants: List<Participant> = emptyList()
-)
+    var participants: List<Participant> = emptyList(),
+) {
+    val startHour: String
+        get() {
+            val sfd = SimpleDateFormat("HH:mm", Locale.getDefault())
+            return date?.toDate()?.let { sfd.format(it) }.orEmpty()
+        }
+
+    val startDate: String
+        get() {
+            val sfd = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            return date?.toDate()?.let { sfd.format(it) }.orEmpty()
+        }
+}
