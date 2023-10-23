@@ -1,4 +1,4 @@
-package com.alpaca.hyperpong.util
+package com.alpaca.hyperpong.util.enums
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme

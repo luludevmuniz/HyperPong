@@ -32,9 +32,9 @@ import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.presentation.common.ErrorItem
 import com.alpaca.hyperpong.presentation.common.EventoItem
 import com.alpaca.hyperpong.presentation.common.ShimmerEffect
-import com.alpaca.hyperpong.util.FiltroData
-import com.alpaca.hyperpong.util.FiltroData.Concluidos
-import com.alpaca.hyperpong.util.FiltroData.Futuros
+import com.alpaca.hyperpong.util.enums.FiltroData
+import com.alpaca.hyperpong.util.enums.FiltroData.Concluidos
+import com.alpaca.hyperpong.util.enums.FiltroData.Futuros
 import kotlinx.coroutines.delay
 
 @Composable
@@ -53,7 +53,12 @@ fun HomeFrontLayer(
     val emptyScreenAnimVisibleState = remember { MutableTransitionState(false).apply { targetState = false } }
     val completedEventsAnimVisibleState = remember { MutableTransitionState(false).apply { targetState = true } }
 
-    LaunchedEffect(isLoading, isError, nextEventsNotEmpty, completedEventsNotEmpty) {
+    LaunchedEffect(
+        isLoading,
+        isError,
+        nextEventsNotEmpty,
+        completedEventsNotEmpty
+    ) {
         if (!completedEventsNotEmpty) {
             completedEventsAnimVisibleState.targetState = false
         }

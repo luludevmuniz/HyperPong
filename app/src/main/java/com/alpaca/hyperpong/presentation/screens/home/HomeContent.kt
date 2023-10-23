@@ -21,8 +21,9 @@ import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.presentation.common.TopBarPadrao
 import com.alpaca.hyperpong.presentation.screens.home.back_layer.HomeBackLayer
 import com.alpaca.hyperpong.presentation.screens.home.front_layer.HomeFrontLayer
-import com.alpaca.hyperpong.util.FiltroData
-import com.alpaca.hyperpong.util.TipoEvento
+import com.alpaca.hyperpong.util.enums.FiltroData
+import com.alpaca.hyperpong.util.enums.TipoCategoria
+import com.alpaca.hyperpong.util.enums.TipoEvento
 import com.alpaca.hyperpong.util.isError
 import com.alpaca.hyperpong.util.isLoading
 import okhttp3.internal.filterList
@@ -40,6 +41,9 @@ fun HomeContent(
     }
     var selectedEventTypes by remember {
         mutableStateOf(listOf<TipoEvento>())
+    }
+    var selectedCategoryTypes by remember {
+        mutableStateOf(listOf<TipoCategoria>())
     }
     var dateFilters by remember {
         mutableStateOf(listOf<FiltroData>())
@@ -66,6 +70,15 @@ fun HomeContent(
                         selectedEventTypes.plus(eventType)
                     }
                 },
+                onCategoryTypeSelected = { categoryType ->
+                    selectedCategoryTypes = if (selectedCategoryTypes.contains(categoryType)) {
+                        selectedCategoryTypes.filterNot {
+                            it == categoryType
+                        }
+                    } else {
+                        selectedCategoryTypes.plus(categoryType)
+                    }
+                },
                 onTabSelected = { newSelectedTab ->
                     selectedTab = newSelectedTab
                 },
@@ -87,13 +100,20 @@ fun HomeContent(
 
             LaunchedEffect(
                 eventos.itemCount,
-                selectedEventTypes
+                selectedEventTypes,
+                selectedCategoryTypes
             ) {
                 eventosConcluidos = eventos.itemSnapshotList.filterList {
                     this?.let {
                         selectedEventTypes
                             .ifEmpty { TipoEvento.entries.toList() }
                             .contains(it.tipoEvento) && it.isConcluido()
+                                &&
+                        categories.any { category ->
+                            selectedCategoryTypes
+                                .ifEmpty { TipoCategoria.entries.toList() }
+                                .contains(category.tipoCategoria)
+                        }
                     } ?: false
                 }.filterNotNull().sortedBy { evento ->
                     evento.dataInicioFormatada
@@ -104,6 +124,12 @@ fun HomeContent(
                         selectedEventTypes
                             .ifEmpty { TipoEvento.entries.toList() }
                             .contains(it.tipoEvento) && it.isFuturo()
+                                &&
+                        categories.any { category ->
+                            selectedCategoryTypes
+                                .ifEmpty { TipoCategoria.entries.toList() }
+                                .contains(category.tipoCategoria)
+                        }
                     } ?: false
                 }.filterNotNull().sortedBy { evento ->
                     evento.dataInicioFormatada

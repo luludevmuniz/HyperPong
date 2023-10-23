@@ -1,7 +1,7 @@
 package com.alpaca.hyperpong.domain.model.firestore
 
-import com.alpaca.hyperpong.util.StatusEvento
-import com.alpaca.hyperpong.util.TipoEvento
+import com.alpaca.hyperpong.util.enums.StatusEvento
+import com.alpaca.hyperpong.util.enums.TipoEvento
 import com.google.firebase.Timestamp
 import java.text.SimpleDateFormat
 import java.time.LocalDate

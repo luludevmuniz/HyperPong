@@ -35,14 +35,16 @@ import com.alpaca.hyperpong.presentation.common.DropdownFilterButton
 import com.alpaca.hyperpong.presentation.common.FilterChipRow
 import com.alpaca.hyperpong.presentation.screens.home.HomeTab
 import com.alpaca.hyperpong.util.Constantes.categoriasEventos
-import com.alpaca.hyperpong.util.FiltroData
-import com.alpaca.hyperpong.util.TipoEvento
+import com.alpaca.hyperpong.util.enums.FiltroData
+import com.alpaca.hyperpong.util.enums.TipoCategoria
+import com.alpaca.hyperpong.util.enums.TipoEvento
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeBackLayer(
     selectedTab: HomeTab,
     onEventTypeSelected: (TipoEvento) -> Unit,
+    onCategoryTypeSelected: (TipoCategoria) -> Unit,
     onTabSelected: (HomeTab) -> Unit,
     onDateChipClicked: (FiltroData) -> Unit
 ) {
@@ -74,7 +76,12 @@ fun HomeBackLayer(
             onEventTypeSelected = { eventType ->
                 onEventTypeSelected(eventType)
             },
-            onDateChipClicked = { filtro -> onDateChipClicked(filtro) }
+            onCategoryTypeSelected = { categoryType ->
+                onCategoryTypeSelected(categoryType)
+            },
+            onDateChipClicked = { filtro ->
+                onDateChipClicked(filtro)
+            }
         )
     }
     if (showDatePicker) {
@@ -91,6 +98,7 @@ private fun HomeBackLayerContent(
     selectedTab: HomeTab,
     onDateButtonClicked: () -> Unit,
     onEventTypeSelected: (TipoEvento) -> Unit,
+    onCategoryTypeSelected: (TipoCategoria) -> Unit,
     onDateChipClicked: (FiltroData) -> Unit
 ) {
     Column(
@@ -121,6 +129,9 @@ private fun HomeBackLayerContent(
             onDateButtonClicked = { onDateButtonClicked() },
             onEventTypeSelected = { eventType ->
                 onEventTypeSelected(eventType)
+            },
+            onCategoryTypeSelected = { categoryType ->
+                onCategoryTypeSelected(categoryType)
             }
         )
         FilterChipRow(
@@ -135,7 +146,8 @@ private fun HomeFilterButtons(
     modalidades: List<String>,
     categorias: List<String>? = null,
     onDateButtonClicked: () -> Unit,
-    onEventTypeSelected: (TipoEvento) -> Unit
+    onEventTypeSelected: (TipoEvento) -> Unit,
+    onCategoryTypeSelected: (TipoCategoria) -> Unit
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(space = 12.dp)
@@ -155,7 +167,10 @@ private fun HomeFilterButtons(
                 title = "Selecionar Categorias",
                 leadingIcon = painterResource(id = R.drawable.ic_settings_slow_motion),
                 items = it,
-                onItemSelected = {}
+                onItemSelected = { categoryType ->
+                    onCategoryTypeSelected(TipoCategoria.toEnum(categoryType = categoryType))
+
+                }
             )
         }
         FilledTonalButton(

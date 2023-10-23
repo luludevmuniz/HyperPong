@@ -1,4 +1,4 @@
-package com.alpaca.hyperpong.util
+package com.alpaca.hyperpong.util.enums
 
 enum class FiltroData {
     Futuros,
