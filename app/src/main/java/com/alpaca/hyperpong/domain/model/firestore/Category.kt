@@ -34,4 +34,6 @@ data class Category(
             4 -> TipoCategoria.FEMININO
             else -> TipoCategoria.DESCONHECIDO
         }
+
+    val priceInCentavos: Long get() = "${price}00".toLong()
 }

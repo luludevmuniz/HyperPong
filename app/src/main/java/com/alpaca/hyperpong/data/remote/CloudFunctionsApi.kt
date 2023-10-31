@@ -8,5 +8,7 @@ import retrofit2.http.POST
 
 interface CloudFunctionsApi {
     @POST("/getPaymentUrl")
-    suspend fun getPaymentUrl(@Body body: GetPaymentUrlRequestBody): Response<ResponseBody>
+    suspend fun getPaymentUrl(
+        @Body paymentsBody: GetPaymentUrlRequestBody
+    ): Response<ResponseBody>
 }

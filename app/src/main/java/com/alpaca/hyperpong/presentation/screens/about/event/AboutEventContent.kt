@@ -39,11 +39,10 @@ fun AboutEventContent(
     modifier: Modifier = Modifier,
     event: Event,
     openBottomSheet: Boolean,
-    tomorrowDay: String,
     selectedCategory: Category,
-    onPaymentUrlRequest: (body: GetPaymentUrlRequestBody) -> Unit,
     onDimissBottomSheet: () -> Unit,
-    onCategoryClicked: (category: Category) -> Unit
+    onCategoryClicked: (category: Category) -> Unit,
+    onSignInClicked: () -> Unit
 ) {
     Box(modifier = modifier) {
         Column(
@@ -149,14 +148,7 @@ fun AboutEventContent(
         if (openBottomSheet) {
             EventSignUpModal(
                 onSignInClicked = {
-                    val body = GetPaymentUrlRequestBody(
-                        value = selectedCategory.price.toLong(),
-                        payday = tomorrowDay,
-                        mainPaymentMethodId = "pix",
-                        Customer = Customer(myId = "pay-652937390fb2a5.16130871")
-                    )
-                    onPaymentUrlRequest(body)
-                    onDimissBottomSheet()
+                    onSignInClicked()
                 }
             ) {
                 onDimissBottomSheet()

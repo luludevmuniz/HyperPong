@@ -25,7 +25,9 @@ import com.alpaca.hyperpong.domain.use_case.cloud_functions.get_payment_url.get_
 import com.alpaca.hyperpong.domain.use_case.firestore.FirestoreUseCases
 import com.alpaca.hyperpong.domain.use_case.firestore.get_event.GetEventUseCase
 import com.alpaca.hyperpong.domain.use_case.firestore.get_eventos.GetEventosUseCase
+import com.alpaca.hyperpong.domain.use_case.firestore.get_user.GetUserUseCase
 import com.alpaca.hyperpong.util.Constantes.PAGE_SIZE
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
@@ -41,19 +43,25 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideAuthRepository(db: FirestoreRepository): AuthRepository =
+    fun provideFirebaseAuth(): FirebaseAuth = Firebase.auth
+
+    @Singleton
+    @Provides
+    fun provideAuthRepository(db: FirestoreRepository, auth: FirebaseAuth): AuthRepository =
         AuthRepositoryImpl(
-            auth = Firebase.auth,
+            auth = auth,
             db = db
         )
 
     @Singleton
     @Provides
     fun provideFirestoreRepository(
+        auth: FirebaseAuth,
         source: EventosPagingSource,
         config: PagingConfig
     ): FirestoreRepository =
         FirestoreRepositoryImpl(
+            auth = auth,
             db = FirebaseFirestore.getInstance(),
             source = source,
             config = config
@@ -78,7 +86,8 @@ object RepositoryModule {
     fun provideFirestoreUseCases(repository: FirestoreRepository): FirestoreUseCases =
         FirestoreUseCases(
             getEventosUseCase = GetEventosUseCase(repository = repository),
-            getEventUseCase = GetEventUseCase(repository = repository)
+            getEventUseCase = GetEventUseCase(repository = repository),
+            getUserUseCase = GetUserUseCase(repository = repository)
         )
 
     @Provides

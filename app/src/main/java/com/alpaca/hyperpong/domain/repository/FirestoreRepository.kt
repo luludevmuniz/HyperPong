@@ -9,10 +9,14 @@ import kotlinx.coroutines.flow.Flow
 typealias SignInResponse = (Response<Boolean>) -> Unit
 typealias GetEventsResponse = Flow<PagingData<Event>>
 typealias GetEventResponse = Flow<Response<Event>>
+typealias GetUserResponse = Flow<Response<User>>
+
 interface FirestoreRepository {
     fun signIn(user: User, onSignInResponse: SignInResponse)
 
     fun getEvents(): GetEventsResponse
 
     fun getEvent(id: String):  GetEventResponse
+
+    fun getUser(): GetUserResponse
 }

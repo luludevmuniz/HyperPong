@@ -10,5 +10,5 @@ class CloudFunctionsRepositoryImpl(
     private val cloudFunctionsApi: CloudFunctionsApi
 ) : CloudFunctionsRepository {
     override suspend fun getPaymentUrl(body: GetPaymentUrlRequestBody): Response<ResponseBody> =
-        cloudFunctionsApi.getPaymentUrl(body = body)
+        cloudFunctionsApi.getPaymentUrl(paymentsBody = body)
 }

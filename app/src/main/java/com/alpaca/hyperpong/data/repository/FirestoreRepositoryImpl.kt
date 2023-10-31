@@ -7,17 +7,21 @@ import com.alpaca.hyperpong.domain.model.firestore.User
 import com.alpaca.hyperpong.domain.repository.FirestoreRepository
 import com.alpaca.hyperpong.domain.repository.GetEventResponse
 import com.alpaca.hyperpong.domain.repository.GetEventsResponse
+import com.alpaca.hyperpong.domain.repository.GetUserResponse
 import com.alpaca.hyperpong.domain.repository.SignInResponse
 import com.alpaca.hyperpong.util.Constantes.EVENTS_COLLECTION
+import com.alpaca.hyperpong.util.Constantes.USERS_COLLECTION
 import com.alpaca.hyperpong.util.ERROR_MESSAGE
 import com.alpaca.hyperpong.util.Response.Error
 import com.alpaca.hyperpong.util.Response.Success
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 
 class FirestoreRepositoryImpl @Inject constructor(
+    private val auth: FirebaseAuth,
     private val db: FirebaseFirestore,
     private val source: EventosPagingSource,
     private val config: PagingConfig
@@ -53,8 +57,8 @@ class FirestoreRepositoryImpl @Inject constructor(
         val documentReference = db.collection(EVENTS_COLLECTION).document(id)
         val listenerRegistration = documentReference.addSnapshotListener { value, error ->
             if (error == null) {
-                value?.toObject(Event::class.java)?.let {
-                    trySend(Success(it))
+                value?.toObject(Event::class.java)?.let { evento ->
+                    trySend(Success(evento))
                 } ?: trySend(Error(error = "Erro ao converter documento para objeto Evento"))
             } else {
                 trySend(Error(error = error.localizedMessage.orEmpty()))
@@ -62,6 +66,25 @@ class FirestoreRepositoryImpl @Inject constructor(
         }
         awaitClose {
             listenerRegistration.remove()
+        }
+    }
+
+    override fun getUser(): GetUserResponse = callbackFlow {
+        auth.currentUser?.let {
+            val documentReference = db.collection(USERS_COLLECTION).document(it.uid)
+            val listenerRegistration = documentReference.addSnapshotListener { value, error ->
+                if (error == null) {
+                    value?.toObject(User::class.java)?.let { user ->
+                        user.uid = it.uid
+                        trySend(Success(user))
+                    } ?: trySend(Error(error = "Erro ao converter documento para objeto User"))
+                } else {
+                    trySend(Error(error = error.localizedMessage.orEmpty()))
+                }
+            }
+            awaitClose {
+                listenerRegistration.remove()
+            }
         }
     }
 }

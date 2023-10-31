@@ -8,5 +8,6 @@ import retrofit2.Response
 class GetPaymentUrlUseCase(
     private val repository: CloudFunctionsRepository
 ) {
-    suspend operator fun invoke(body: GetPaymentUrlRequestBody): Response<ResponseBody> = repository.getPaymentUrl(body = body)
+    suspend operator fun invoke(body: GetPaymentUrlRequestBody): Response<ResponseBody> =
+        repository.getPaymentUrl(body = body)
 }

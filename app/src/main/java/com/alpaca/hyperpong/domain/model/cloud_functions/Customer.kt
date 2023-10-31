@@ -1,10 +1,10 @@
 package com.alpaca.hyperpong.domain.model.cloud_functions
 
 data class Customer(
-    val myId: String? = null,
+    val galaxPayId: String? = null,
     val name: String? = null,
     val document: String? = null,
-    val emails: String? = null,
+    val emails: Array<String>? = null,
     val phones: IntArray? = null
 ) {
     override fun equals(other: Any?): Boolean {

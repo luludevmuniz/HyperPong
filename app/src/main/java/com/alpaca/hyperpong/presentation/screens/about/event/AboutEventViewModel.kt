@@ -32,6 +32,7 @@ class AboutEventViewModel @Inject constructor(
     private val _paymentUrl: MutableStateFlow<Response<String>> =
         MutableStateFlow(Idle)
     val paymentUrl = _paymentUrl.asStateFlow()
+    val user = useCases.firestoreUseCase.getUserUseCase()
 
     fun getEvento(id: String) {
         CoroutineScope(Dispatchers.IO).launch {

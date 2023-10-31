@@ -5,8 +5,8 @@ object Constantes {
 
     const val PAGE_SIZE = 10
 
-
     const val EVENTS_COLLECTION = "events"
+    const val USERS_COLLECTION = "users"
 
     val categoriasEventos = listOf("Rating A", "Rating B", "Feminino", "Iniciante")
     val loadingTexts = listOf(

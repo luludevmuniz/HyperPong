@@ -39,10 +39,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.alpaca.hyperpong.R
+import com.alpaca.hyperpong.domain.model.cloud_functions.Customer
+import com.alpaca.hyperpong.domain.model.cloud_functions.request_body.GetPaymentUrlRequestBody
 import com.alpaca.hyperpong.domain.model.firestore.Category
 import com.alpaca.hyperpong.domain.model.firestore.Event
 import com.alpaca.hyperpong.presentation.common.LoadingScreen
 import com.alpaca.hyperpong.presentation.common.TopBarPadrao
+import com.alpaca.hyperpong.util.Response
 import com.alpaca.hyperpong.util.Response.Error
 import com.alpaca.hyperpong.util.Response.Loading
 import com.alpaca.hyperpong.util.Response.Success
@@ -54,6 +57,7 @@ fun AboutEventScreen(
     onNavigationIconClicked: () -> Unit
 ) {
     viewModel.getEvento(id = eventoId)
+    val user by viewModel.user.collectAsStateWithLifecycle(initialValue = Response.Idle)
     val eventResponse by viewModel.event.collectAsStateWithLifecycle()
     var event: Event? by remember { mutableStateOf(null) }
     val paymentUrlResponse by viewModel.paymentUrl.collectAsStateWithLifecycle()
@@ -77,16 +81,22 @@ fun AboutEventScreen(
     if (paymentUrlResponse is Success) {
         paymentUrl = (paymentUrlResponse as Success<String>).data
         showDialog = true
+        openBottomSheet = false
+    } else if (paymentUrlResponse is Error) {
+        TODO()
     }
+
     if (isLoading) {
         LoadingScreen()
     } else if (eventResponse is Error) {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.errorContainer)
-            .padding(all = 24.dp),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = MaterialTheme.colorScheme.errorContainer)
+                .padding(all = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center) {
+            verticalArrangement = Arrangement.Center
+        ) {
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -157,18 +167,47 @@ fun AboutEventScreen(
                     event = it,
                     selectedCategory = selectedCategory,
                     openBottomSheet = openBottomSheet,
-                    tomorrowDay = viewModel.getTomorrowDay(),
-                    onPaymentUrlRequest = { body ->
-                        if (paymentUrl.isEmpty()) {
-                            viewModel.getPaymentUrl(body = body)
-                        } else {
-                            showDialog = true
+                    onDimissBottomSheet = { openBottomSheet = false },
+                    onCategoryClicked = { category ->
+                        if (selectedCategory != category) {
+                            selectedCategory = category
+                            paymentUrl = ""
                         }
                     },
-                    onDimissBottomSheet = { openBottomSheet = false },
-                ) { category ->
-                    selectedCategory = category
-                }
+                    onSignInClicked = {
+                        when (val currentUser = user) {
+                            is Success -> {
+                                val body = GetPaymentUrlRequestBody(
+                                    userId = if (currentUser.data.paymentId.isBlank())
+                                        currentUser.data.uid
+                                    else
+                                        null,
+                                    value = selectedCategory.priceInCentavos,
+                                    payday = viewModel.getTomorrowDay(),
+                                    mainPaymentMethodId = "pix",
+                                    Customer = if (currentUser.data.paymentId.isBlank()) {
+                                        Customer(
+                                            name = currentUser.data.name,
+                                            document = currentUser.data.document,
+                                            emails = arrayOf(currentUser.data.email)
+                                        )
+                                    } else {
+//                                        Customer(myId = "pay-652937390fb2a5.16130871")
+                                        Customer(galaxPayId = currentUser.data.paymentId)
+                                    }
+                                )
+                                if (paymentUrl.isEmpty()) {
+                                    viewModel.getPaymentUrl(body = body)
+                                } else {
+                                    showDialog = true
+                                    openBottomSheet = false
+                                }
+                            }
+
+                            else -> {}
+                        }
+                    }
+                )
             }
 
             if (showDialog) {
